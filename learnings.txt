@@ -1,0 +1,12 @@
+# Popup is the window that appears when a user clicks on the extension icon. 
+
+# Content script is the script that runs in the context of the page. Has access to the DOM of the page.
+
+# Service worker is the script that runs in the background. Dont have any access to the DOM of the page.
+but can access the chrome api. Can be used for API calls, event listeners, etc, storage, etc.
+
+# Chrome storage is a way to store data in the browser. It is similar to local storage, but is scoped to the extension.
+
+
+
+# Google har lanserat något som heter "Built in AI" som är en liten AI modell som är inbyggd i Chrome. Som kan köras på användarens hårdvara. 

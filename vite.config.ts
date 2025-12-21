@@ -17,9 +17,18 @@ export default defineConfig({
       },
       input: {
         main: resolve(__dirname, "index.html"),
+        content: resolve(__dirname, "src/content.tsx"),
+        "service-worker": resolve(__dirname, "src/service-worker.ts"),
       },
     },
   },
+  plugins: [
+    react({
+      include: /\.(jsx|tsx)$/,
+      exclude: /content\.tsx$/,
+    }),
+    tailwindcss(),
+  ],
 
   //Added for shadcn ui to work
   resolve: {
@@ -27,5 +36,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  plugins: [react(), tailwindcss()],
 });

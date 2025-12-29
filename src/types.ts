@@ -10,3 +10,6 @@ export type IntroductionStep = {
   description: string;
   badge: string;
 };
+
+//Views for the app
+export type AppViews = "introduction" | "settings" | "dictionary";

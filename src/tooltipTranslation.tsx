@@ -108,11 +108,6 @@ export function TooltipTranslation() {
           {/* Translation text */}
           <p className="text-sm leading-relaxed text-foreground">{text}</p>
         </div>
-
-        {/* Arrow pointing to selected text */}
-        <div className="absolute left-1/2 top-full -translate-x-1/2">
-          <div className="size-0 border-x-8 border-t-8 border-x-transparent border-t-card" />
-        </div>
       </div>
     </div>
   );

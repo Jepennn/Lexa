@@ -2,7 +2,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { TooltipTranslation } from "./tooltipTranslation";
-import contentStyles from "./content.css?inline";
+  import contentStyles from "./content.css?inline";
 
 // Create the host element
 const shadowHost = document.createElement("div");

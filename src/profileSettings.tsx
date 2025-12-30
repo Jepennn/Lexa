@@ -1,56 +1,59 @@
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { NativeSelect, NativeSelectOption } from "@/components/ui/native-select";
+import { useGetUserSettings } from "@/hooks/useGetUserSettings";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
-type Language = "swedish" | "french" | "spanish" | "japanese";
+type Language = "swedish" | "french" | "spanish" | "japanese" | "";
 
 type SwitchOption = {
-  id: string;
+  id: "voiceMode" | "dictionaryMode" | "lightMode";
   label: string;
   description: string;
-  enabled: boolean;
 };
 
-//TODO:
-/**
- * 1. Add a way to store the users setting in the chrome storage.
- * 2. Add a way to load the settings from the chrome storage
- *
- */
+const SWITCH_OPTIONS: SwitchOption[] = [
+  {
+    id: "voiceMode",
+    label: "Voice mode",
+    description: "Get the translation spoken out loud",
+  },
+  {
+    id: "dictionaryMode",
+    label: "Dictionary mode",
+    description: "Save the translation to your dictionary",
+  },
+  {
+    id: "lightMode",
+    label: "Light mode",
+    description: "Use a light theme for the translation",
+  },
+];
 
 export function ProfileSettings() {
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>("swedish");
-  const [switches, setSwitches] = useState<SwitchOption[]>([
-    {
-      id: "button1",
-      label: "Button 1",
-      description: "Enable button 1 functionality",
-      enabled: false,
-    },
-    {
-      id: "button2",
-      label: "Button 2",
-      description: "Enable button 2 functionality",
-      enabled: false,
-    },
-    {
-      id: "button3",
-      label: "Button 3",
-      description: "Enable button 3 functionality",
-      enabled: false,
-    },
-  ]);
+  const userSettings = useGetUserSettings();
 
-  const toggleSwitch = (id: string) => {
-    setSwitches((prev) => prev.map((sw) => (sw.id === id ? { ...sw, enabled: !sw.enabled } : sw)));
+  if (!userSettings || !userSettings.targetLang || 1 === 1) {
+    return (
+      <Alert variant="destructive" className="w-full">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle>Settings Not Found</AlertTitle>
+        <AlertDescription>
+          Unable to load user settings. Please try reloading the extension.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+  // Toggle switch in Chrome storage
+  const toggleSwitch = (id: "voiceMode" | "dictionaryMode" | "lightMode") => {
+    const newValue = !userSettings[id];
+    chrome.storage.sync.set({ [id]: newValue });
+  };
+
+  // Update language in Chrome storage
+  const handleLanguageChange = (language: Language) => {
+    chrome.storage.sync.set({ targetLang: language });
   };
 
   return (
@@ -61,22 +64,19 @@ export function ProfileSettings() {
           <Label htmlFor="language" className="text-xs font-medium text-foreground">
             Translation Language
           </Label>
-          <Select
-            value={selectedLanguage}
-            onValueChange={(value) => setSelectedLanguage(value as Language)}
+          <NativeSelect
+            size="sm"
+            className="w-full text-white"
+            id="language"
+            value={userSettings.targetLang}
+            onChange={(e) => handleLanguageChange(e.target.value as Language)}
           >
-            <SelectTrigger id="language" className="w-full">
-              <SelectValue placeholder="Select a language" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="swedish">Swedish</SelectItem>
-                <SelectItem value="french">French</SelectItem>
-                <SelectItem value="spanish">Spanish</SelectItem>
-                <SelectItem value="japanese">Japanese</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
+            <NativeSelectOption value="">Not selected</NativeSelectOption>
+            <NativeSelectOption value="swedish">Swedish</NativeSelectOption>
+            <NativeSelectOption value="french">French</NativeSelectOption>
+            <NativeSelectOption value="spanish">Spanish</NativeSelectOption>
+            <NativeSelectOption value="japanese">Japanese</NativeSelectOption>
+          </NativeSelect>
           <p className="text-[10px] text-muted-foreground">
             Choose which language to translate text into
           </p>
@@ -95,7 +95,7 @@ export function ProfileSettings() {
           </div>
 
           {/* Switches - Mapped from array */}
-          {switches.map((switchOption) => (
+          {SWITCH_OPTIONS.map((switchOption) => (
             <div
               key={switchOption.id}
               className="flex items-center justify-between rounded-lg bg-muted/50 px-3 py-2.5"
@@ -111,7 +111,7 @@ export function ProfileSettings() {
               </div>
               <Switch
                 id={switchOption.id}
-                checked={switchOption.enabled}
+                checked={userSettings[switchOption.id]}
                 onCheckedChange={() => toggleSwitch(switchOption.id)}
               />
             </div>

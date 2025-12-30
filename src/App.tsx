@@ -125,14 +125,6 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Footer / Dictionary CTA */}
-      <Button
-        onClick={() => openView("dictionary")}
-        className="w-full h-9 text-[11px] font-semibold"
-      >
-        View Dictionary
-      </Button>
     </Layout>
   );
 }

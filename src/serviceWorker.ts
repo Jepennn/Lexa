@@ -1,10 +1,23 @@
-// Service Worker (Background Script) for Chrome Extension
-// This runs in the background and can handle events, API calls, and message passing
+
 
 console.log("Service Worker loaded");
 
-// 1. Skapa menyn när extensionen installeras
+// Create the context menu on install and initialize default settings
 chrome.runtime.onInstalled.addListener(() => {
+  // Initialize default settings on first install
+  chrome.storage.sync.get(null, (result) => {
+    const defaultSettings = {
+      targetLang: result.targetLang ?? "swedish",
+      voiceMode: result.voiceMode ?? true, // Voice mode enabled by default
+      dictionaryMode: result.dictionaryMode ?? true, // Dictionary mode enabled by default
+      lightMode: result.lightMode ?? true, // Light mode enabled by default
+    };
+
+    chrome.storage.sync.set(defaultSettings, () => {
+      console.log("Default settings initialized:", defaultSettings);
+    });
+  });
+
   chrome.contextMenus.create({
     id: "translate-word",
     title: "Translate marked text", // %s byts ut mot markerad text automatiskt
@@ -23,7 +36,6 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
       action: "SHOW_TRANSLATION",
       text: info.selectionText ?? "",
       length: info.selectionText?.length ?? 0,
-      
     });
   }
 });

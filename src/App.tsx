@@ -45,7 +45,7 @@ function App() {
     return <NoAccessToAi />;
   }
 
-  if (appView === "settings" && hasAccessAI) {
+  if (appView === "settings") {
     return (
       <Layout
         title="Translation Settings"

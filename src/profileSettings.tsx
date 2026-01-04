@@ -5,7 +5,7 @@ import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-type Language = "swedish" | "french" | "spanish" | "japanese" | "";
+type Language = "sv" | "fr" | "es" | "ja" | "";
 
 type SwitchOption = {
   id: "voiceMode" | "dictionaryMode" | "lightMode";
@@ -34,7 +34,7 @@ const SWITCH_OPTIONS: SwitchOption[] = [
 export function ProfileSettings() {
   const userSettings = useGetUserSettings();
 
-  if (!userSettings || !userSettings.targetLang || 1 === 1) {
+  if (!userSettings || !userSettings.targetLang) {
     return (
       <Alert variant="destructive" className="w-full">
         <AlertCircle className="h-4 w-4" />
@@ -72,10 +72,10 @@ export function ProfileSettings() {
             onChange={(e) => handleLanguageChange(e.target.value as Language)}
           >
             <NativeSelectOption value="">Not selected</NativeSelectOption>
-            <NativeSelectOption value="swedish">Swedish</NativeSelectOption>
-            <NativeSelectOption value="french">French</NativeSelectOption>
-            <NativeSelectOption value="spanish">Spanish</NativeSelectOption>
-            <NativeSelectOption value="japanese">Japanese</NativeSelectOption>
+            <NativeSelectOption value="sv">Swedish</NativeSelectOption>
+            <NativeSelectOption value="fr">French</NativeSelectOption>
+            <NativeSelectOption value="es">Spanish</NativeSelectOption>
+            <NativeSelectOption value="ja">Japanese</NativeSelectOption>
           </NativeSelect>
           <p className="text-[10px] text-muted-foreground">
             Choose which language to translate text into

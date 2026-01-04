@@ -1,34 +1,39 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, Volume2, BookOpen, Sun, Moon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Spinner } from "@/components/ui/spinner";
 
 //Importing custom types
 import type { TranslationMessage } from "./types";
 
 export function TooltipTranslation() {
+  console.log("TooltipTranslation component rendered");
+
   const [text, setText] = useState<string>("");
-  // const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const [error, setError] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Store user settings from the message
+  const [voiceMode, setVoiceMode] = useState<boolean>(true);
+  const [dictionaryMode, setDictionaryMode] = useState<boolean>(true);
+  const [lightMode, setLightMode] = useState<boolean>(true);
+
   const [position, setPosition] = useState<{ x: number; y: number }>({
     x: 0,
     y: 0,
   });
 
-  console.log("TranslationOverlay component rendered");
-
-  //TODO:
-  /**
-   * 1. Implement so we can send a text from service worker to content script to show the translation overlay
-   * 2. Implement a communication between the content script and the service worker to check if the user can use the request language combination
-   */
-
   //TODO: Maybe move this logic to a custom hook
   useEffect(() => {
-    chrome.runtime.onMessage.addListener(async (message: TranslationMessage) => {
+    const messageListener = async (message: TranslationMessage) => {
       //Message 1
       if (message.action === "SHOW_TRANSLATION") {
+        // Update settings from the message (sent by service worker)
+        setVoiceMode(message.voiceMode);
+        setDictionaryMode(message.dictionaryMode);
+        setLightMode(message.lightMode);
+
         // Get the current selection position
         const selection = window.getSelection();
         if (selection && selection.rangeCount > 0) {
@@ -43,30 +48,54 @@ export function TooltipTranslation() {
           });
         }
 
-        //TODO: Maybe fetch the users preferred language if possible and use that instead of hardcoded "en" and "sv"
-        const translatorCapabilities = await Translator.availability({
-          sourceLanguage: "en",
-          targetLanguage: "sv",
-        });
-
-        if (translatorCapabilities === "unavailable") {
-          console.warn("Translation capabilities unavailable");
-          // TODO: Show error message to user
-        }
-
-        //TODO: Implement so a loading state is shown if the model needs to be created
-        const translator = await Translator.create({
-          sourceLanguage: "en",
-          targetLanguage: "sv",
-        });
-
-        const translatedText = await translator.translate(message.text);
-        console.log("Translated text:", translatedText);
-        setText(translatedText);
+        // Show the overlay with loading state
         setIsVisible(true);
+        setIsLoading(true);
+        setText("");
+
+        try {
+          // Use targetLang from message (which comes from user settings via service worker)
+          const targetLanguage = message.targetLang;
+
+          //Check if the user has the necessary capabilities to translate the text
+          const translatorCapabilities = await Translator.availability({
+            sourceLanguage: "en",
+            targetLanguage: targetLanguage,
+          });
+
+          if (translatorCapabilities === "unavailable") {
+            console.warn("Translation capabilities unavailable");
+            setText("Translation unavailable for this language");
+            setIsLoading(false);
+            return;
+          }
+
+          // Create translator (this might take time if model needs to be downloaded)
+          const translator = await Translator.create({
+            sourceLanguage: "en",
+            targetLanguage: targetLanguage,
+          });
+
+          // Translate the text
+          const translatedText = await translator.translate(message.text);
+          console.log("Translated text:", translatedText);
+          setText(translatedText);
+        } catch (error) {
+          console.error("Translation error:", error);
+          setText("Translation failed. Please try again.");
+        } finally {
+          setIsLoading(false);
+        }
       }
       return true; // Keep the message listener alive
-    });
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // Cleanup: remove listener when component unmounts
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
   }, []);
 
   //If no translation is requested, return no UI
@@ -91,22 +120,55 @@ export function TooltipTranslation() {
               <span className="size-1.5 rounded-full bg-primary ring-2 ring-primary/40" />
               Translation
             </Badge>
-            <Button
-              size="icon-sm"
-              variant="ghost"
-              onClick={() => {
-                setIsVisible(false);
-                setText("");
-              }}
-              className="size-6 text-muted-foreground hover:text-foreground"
-              aria-label="Close translation"
-            >
-              <X className="size-3.5" />
-            </Button>
+            <div className="flex items-center gap-1">
+              {/* Options bar */}
+              <div className="flex items-center gap-0.5 rounded-md border border-border/50 bg-muted/30 px-1 py-0.5">
+                {/* Voice mode icon */}
+                {voiceMode && (
+                  <div className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
+                    <Volume2 className="size-3.5" />
+                  </div>
+                )}
+
+                {/* Dictionary mode icon */}
+                {dictionaryMode && (
+                  <div className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
+                    <BookOpen className="size-3.5" />
+                  </div>
+                )}
+
+                {/* Light/Dark mode icon */}
+                <div className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
+                  {lightMode ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+                </div>
+              </div>
+
+              {/* Close button */}
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                onClick={() => {
+                  setIsVisible(false);
+                  setText("");
+                  setIsLoading(false);
+                }}
+                className="size-6 text-muted-foreground hover:text-foreground"
+                aria-label="Close translation"
+              >
+                <X className="size-3.5" />
+              </Button>
+            </div>
           </div>
 
-          {/* Translation text */}
-          <p className="text-sm leading-relaxed text-foreground">{text}</p>
+          {/* Translation text or loading spinner */}
+          {isLoading ? (
+            <div className="flex items-center gap-2 py-2">
+              <Spinner className="size-4 text-primary" />
+              <p className="text-sm text-muted-foreground">Translating...</p>
+            </div>
+          ) : (
+            <p className="text-sm leading-relaxed text-foreground">{text}</p>
+          )}
         </div>
       </div>
     </div>

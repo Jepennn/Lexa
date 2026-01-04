@@ -1,42 +1,50 @@
-
-
 console.log("Service Worker loaded");
+import type { TranslationMessage } from "./types";
 
 // Create the context menu on install and initialize default settings
 chrome.runtime.onInstalled.addListener(() => {
   // Initialize default settings on first install
   chrome.storage.sync.get(null, (result) => {
     const defaultSettings = {
-      targetLang: result.targetLang ?? "swedish",
+      targetLang: result.targetLang ?? "sv",
       voiceMode: result.voiceMode ?? true, // Voice mode enabled by default
       dictionaryMode: result.dictionaryMode ?? true, // Dictionary mode enabled by default
       lightMode: result.lightMode ?? true, // Light mode enabled by default
     };
 
-    chrome.storage.sync.set(defaultSettings, () => {
-      console.log("Default settings initialized:", defaultSettings);
-    });
-  });
-
-  chrome.contextMenus.create({
-    id: "translate-word",
-    title: "Translate marked text", // %s byts ut mot markerad text automatiskt
-    contexts: ["selection"], // Visa bara menyn när text är markerad
+    //Set the default settings when the extension is installed
+    chrome.storage.sync.set(defaultSettings);
   });
 });
 
-chrome.contextMenus.onClicked.addListener((info, tab) => {
-  console.log("Info:", info);
-  console.log("Tab:", tab);
+//Create the context menu when the extension is installed
+chrome.contextMenus.create({
+  id: "translate-word",
+  title: "Translate marked text",
+  contexts: ["selection"], // Show the menu only when text is selected
+});
 
+chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   //Sending the marked text to the content script
-  if (info.menuItemId === "translate-word" && tab?.id) {
-    console.log("Sending message", info.selectionText);
+  if (info.menuItemId === "translate-word" && tab?.id && info.selectionText) {
+    const userSettings = await chrome.storage.sync.get([
+      "targetLang",
+      "voiceMode",
+      "dictionaryMode",
+      "lightMode",
+    ]);
+
+    console.log("User settings:", userSettings);
+
     chrome.tabs.sendMessage(tab.id, {
       action: "SHOW_TRANSLATION",
-      text: info.selectionText ?? "",
-      length: info.selectionText?.length ?? 0,
-    });
+      text: info.selectionText,
+      length: info.selectionText.length,
+      targetLang: userSettings.targetLang,
+      voiceMode: userSettings.voiceMode,
+      dictionaryMode: userSettings.dictionaryMode,
+      lightMode: userSettings.lightMode,
+    } as TranslationMessage);
   }
 });
 

@@ -14,7 +14,7 @@ export function useGetUserSettings() {
     // initial load
     chrome.storage.sync.get(null, (result) => {
       setSettings({
-        targetLang: typeof result.targetLang === "string" ? result.targetLang : "swedish",
+        targetLang: typeof result.targetLang === "string" ? result.targetLang : "sv",
         voiceMode: typeof result.voiceMode === "boolean" ? result.voiceMode : true,
         dictionaryMode: typeof result.dictionaryMode === "boolean" ? result.dictionaryMode : true,
         lightMode: typeof result.lightMode === "boolean" ? result.lightMode : true,

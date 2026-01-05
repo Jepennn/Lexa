@@ -15,16 +15,28 @@ chrome.runtime.onInstalled.addListener(() => {
     //Set the default settings when the extension is installed
     chrome.storage.sync.set(defaultSettings);
   });
-});
 
-//Create the context menu when the extension is installed
-chrome.contextMenus.create({
-  id: "translate-word",
-  title: "Translate marked text",
-  contexts: ["selection"], // Show the menu only when text is selected
+  // Create context menus
+  chrome.contextMenus.create({
+    id: "translate-word",
+    title: "Translate marked text",
+    contexts: ["selection"], // Show the menu only when text is selected
+  });
+
+  chrome.contextMenus.create({
+    id: "open-side-panel",
+    title: "Open Translation Panel",
+    contexts: ["page", "selection"],
+  });
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
+  // Open side panel
+  if (info.menuItemId === "open-side-panel" && tab?.id) {
+    chrome.sidePanel.open({ tabId: tab.id });
+    return;
+  }
+
   //Sending the marked text to the content script
   if (info.menuItemId === "translate-word" && tab?.id && info.selectionText) {
     const userSettings = await chrome.storage.sync.get([

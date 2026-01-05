@@ -15,6 +15,7 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, "index.html"),
         serviceWorker: resolve(__dirname, "src/serviceWorker.ts"),
+        sidePanel: resolve(__dirname, "sidePanel.html"),
       },
 
       output: {

@@ -7,6 +7,9 @@
     "default_popup": "dist/ui/index.html",
     "default_icon": "images/icon.png"
   },
+  "side_panel": {
+    "default_path": "dist/ui/sidePanel.html"
+  },
   "icons": {
     "16": "images/icon.png",
     "48": "images/icon.png",
@@ -22,5 +25,5 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["tabs", "storage", "contextMenus"]
+  "permissions": ["tabs", "storage", "contextMenus", "sidePanel"]
 }

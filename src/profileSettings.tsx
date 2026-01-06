@@ -5,7 +5,7 @@ import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
-type Language = "sv" | "fr" | "es" | "ja" | "";
+type Language = "sv" | "fr" | "es" | "ja" | "en" | "";
 
 type SwitchOption = {
   id: "voiceMode" | "dictionaryMode" | "lightMode";
@@ -52,34 +52,63 @@ export function ProfileSettings() {
   };
 
   // Update language in Chrome storage
-  const handleLanguageChange = (language: Language) => {
+  const handleTargetLanguageChange = (language: Language) => {
     chrome.storage.sync.set({ targetLang: language });
+  };
+
+  const handleSourceLanguageChange = (language: Language) => {
+    chrome.storage.sync.set({ sourceLang: language });
   };
 
   return (
     <div className="flex-1 overflow-y-auto rounded-xl border border-border bg-card">
       <div className="space-y-4 px-4 py-4">
         {/* Language Selection */}
-        <div className="space-y-2">
-          <Label htmlFor="language" className="text-xs font-medium text-foreground">
-            Translation Language
-          </Label>
-          <NativeSelect
-            size="sm"
-            className="w-full text-white"
-            id="language"
-            value={userSettings.targetLang}
-            onChange={(e) => handleLanguageChange(e.target.value as Language)}
-          >
-            <NativeSelectOption value="">Not selected</NativeSelectOption>
-            <NativeSelectOption value="sv">Swedish</NativeSelectOption>
-            <NativeSelectOption value="fr">French</NativeSelectOption>
-            <NativeSelectOption value="es">Spanish</NativeSelectOption>
-            <NativeSelectOption value="ja">Japanese</NativeSelectOption>
-          </NativeSelect>
-          <p className="text-[10px] text-muted-foreground">
-            Choose which language to translate text into
-          </p>
+        <div className="flex flex-col gap-3.5">
+          <div>
+            <Label htmlFor="language" className="text-xs font-semibold text-foreground">
+              Translation Language
+            </Label>
+            <p className="text-[10px] text-muted-foreground">
+              Choose which language to translate text into
+            </p>
+            <NativeSelect
+              size="sm"
+              className="w-full text-white"
+              id="language"
+              value={userSettings.targetLang}
+              onChange={(e) => handleTargetLanguageChange(e.target.value as Language)}
+            >
+              <NativeSelectOption value="">Not selected</NativeSelectOption>
+              <NativeSelectOption value="sv">Swedish</NativeSelectOption>
+              <NativeSelectOption value="fr">French</NativeSelectOption>
+              <NativeSelectOption value="es">Spanish</NativeSelectOption>
+              <NativeSelectOption value="ja">Japanese</NativeSelectOption>
+              <NativeSelectOption value="en">English</NativeSelectOption>
+            </NativeSelect>
+          </div>
+          <div>
+            <Label htmlFor="sourceLanguage" className="text-xs font-semibold text-foreground">
+              Source Language
+            </Label>
+            <p className="text-[10px] text-muted-foreground">
+              Choose which language to translate text from
+            </p>
+            <NativeSelect
+              size="sm"
+              className="w-full text-white"
+              id="sourceLanguage"
+              value={userSettings.sourceLang}
+              onChange={(e) => handleSourceLanguageChange(e.target.value as Language)}
+            >
+              <NativeSelectOption value="">Not selected</NativeSelectOption>
+              <NativeSelectOption value="sv">Swedish</NativeSelectOption>
+              <NativeSelectOption value="fr">French</NativeSelectOption>
+              <NativeSelectOption value="es">Spanish</NativeSelectOption>
+              <NativeSelectOption value="ja">Japanese</NativeSelectOption>
+              <NativeSelectOption value="en">English</NativeSelectOption>
+            </NativeSelect>
+          </div>
         </div>
 
         {/* Divider */}
@@ -88,10 +117,9 @@ export function ProfileSettings() {
         {/* Translation Display Options */}
         <div className="space-y-3">
           <div>
-            <h3 className="text-xs font-medium text-foreground">Display Options</h3>
-            <p className="text-[10px] text-muted-foreground">
-              Customize what appears in translations
-            </p>
+            <Label htmlFor="displayOptions" className="text-xs font-semibold text-foreground">
+              Translation toolbar options
+            </Label>
           </div>
 
           {/* Switches - Mapped from array */}

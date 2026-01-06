@@ -34,8 +34,8 @@ export function TooltipTranslation() {
     }
   };
 
+  // TODO: Implement dictionary functionality
   const handleDictionary = () => {
-    // TODO: Implement dictionary functionality
     console.log("Dictionary lookup for:", originalText);
   };
 
@@ -65,7 +65,7 @@ export function TooltipTranslation() {
         // Update settings from the message (sent by service worker)
         setVoiceMode(message.voiceMode);
         setDictionaryMode(message.dictionaryMode);
-        setSourceLang("en"); // Currently hardcoded to English source
+        setSourceLang(message.sourceLang);
 
         // Get the current selection position
         const selection = window.getSelection();
@@ -89,7 +89,7 @@ export function TooltipTranslation() {
         try {
           //Check if the user has the necessary capabilities to translate the text
           const translatorCapabilities = await Translator.availability({
-            sourceLanguage: "en",
+            sourceLanguage: message.sourceLang,
             targetLanguage: message.targetLang,
           });
 
@@ -102,7 +102,7 @@ export function TooltipTranslation() {
 
           // Create translator (this might take time if model needs to be downloaded)
           const translator = await Translator.create({
-            sourceLanguage: "en",
+            sourceLanguage: message.sourceLang,
             targetLanguage: message.targetLang,
           });
 

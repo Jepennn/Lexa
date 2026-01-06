@@ -6,6 +6,7 @@ chrome.runtime.onInstalled.addListener(() => {
   // Initialize default settings on first install
   chrome.storage.sync.get(null, (result) => {
     const defaultSettings = {
+      sourceLang: result.sourceLang ?? "en",
       targetLang: result.targetLang ?? "sv",
       voiceMode: result.voiceMode ?? true, // Voice mode enabled by default
       dictionaryMode: result.dictionaryMode ?? true, // Dictionary mode enabled by default
@@ -40,6 +41,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   //Sending the marked text to the content script
   if (info.menuItemId === "translate-word" && tab?.id && info.selectionText) {
     const userSettings = await chrome.storage.sync.get([
+      "sourceLang",
       "targetLang",
       "voiceMode",
       "dictionaryMode",
@@ -52,6 +54,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       action: "SHOW_TRANSLATION",
       text: info.selectionText,
       length: info.selectionText.length,
+      sourceLang: userSettings.sourceLang,
       targetLang: userSettings.targetLang,
       voiceMode: userSettings.voiceMode,
       dictionaryMode: userSettings.dictionaryMode,

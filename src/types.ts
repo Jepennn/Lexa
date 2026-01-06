@@ -2,6 +2,7 @@ export type TranslationMessage = {
   action: string;
   text: string;
   length: number;
+  sourceLang: string;
   targetLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
@@ -10,6 +11,7 @@ export type TranslationMessage = {
 
 export type UserSettings = {
   targetLang: string;
+  sourceLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
   lightMode: boolean;

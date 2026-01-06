@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 type UserSettings = {
   targetLang: string;
+  sourceLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
   lightMode: boolean;
@@ -15,6 +16,7 @@ export function useGetUserSettings() {
     chrome.storage.sync.get(null, (result) => {
       setSettings({
         targetLang: typeof result.targetLang === "string" ? result.targetLang : "sv",
+        sourceLang: typeof result.sourceLang === "string" ? result.sourceLang : "en",
         voiceMode: typeof result.voiceMode === "boolean" ? result.voiceMode : true,
         dictionaryMode: typeof result.dictionaryMode === "boolean" ? result.dictionaryMode : true,
         lightMode: typeof result.lightMode === "boolean" ? result.lightMode : true,

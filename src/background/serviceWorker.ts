@@ -1,5 +1,5 @@
 console.log("Service Worker loaded");
-import type { TranslationMessage } from "./types";
+import type { TranslationMessage } from "@/types";
 
 // Create the context menu on install and initialize default settings
 chrome.runtime.onInstalled.addListener(() => {
@@ -69,3 +69,4 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.sidePanel.open({ tabId: sender.tab.id });
   }
 });
+

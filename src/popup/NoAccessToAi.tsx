@@ -9,7 +9,7 @@ export function NoAccessToAi() {
   };
 
   return (
-    <div className="flex h-full w-full items-start justify-start bg-background px-3 py-3">
+    <div className="flex h-full w-full items-center justify-center bg-background px-3 py-3">
       <div className="flex h-full w-full flex-col gap-4 rounded-2xl border border-border bg-card p-4 shadow-[0_18px_45px_rgba(0,0,0,0.55)]">
         <Alert variant="destructive" className="border-destructive/50">
           <AlertCircle />
@@ -20,8 +20,9 @@ export function NoAccessToAi() {
               <p className="text-xs leading-relaxed">
                 This extension requires Chrome's built-in AI features to work. Your environment does
                 not fulfill all the requirements at the moment. Often it's just a small change that
-                needs to be made to your environment to get it to work. Check out our get started
-                guide to learn more.
+                needs to be made to your environment to get it to work. Start by updating your
+                Chrome browser to the latest version. If that doesn't work, then check out our get
+                started guide to learn more.
               </p>
 
               <Button
@@ -38,3 +39,4 @@ export function NoAccessToAi() {
     </div>
   );
 }
+

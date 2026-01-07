@@ -6,7 +6,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 
 //Importing custom types
-import type { TranslationMessage } from "./types";
+import type { TranslationMessage } from "@/types";
 
 export function TooltipTranslation() {
   const [originalText, setOriginalText] = useState<string>("");
@@ -213,3 +213,4 @@ export function TooltipTranslation() {
     </div>
   );
 }
+

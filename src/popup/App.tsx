@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
-import { Dictionary } from "./dictionary";
-import { NoAccessToAi } from "./noAccesToAi";
-import { ProfileSettings } from "./profileSettings";
+import { Dictionary } from "./Dictionary";
+import { NoAccessToAi } from "./NoAccessToAi";
+import { ProfileSettings } from "./ProfileSettings";
 
 //Importing custom types
-import type { IntroductionStep, AppViews } from "./types";
+import type { IntroductionStep, AppViews } from "@/types";
 
 const steps: IntroductionStep[] = [
   {
     title: "Highlight & translate instantly",
     description:
-      "Select any text on the page and get an instant translation without leaving what you’re doing.",
+      "Select any text on the page and get an instant translation without leaving what you're doing.",
     badge: "Step 1",
   },
   {
@@ -130,3 +130,4 @@ function App() {
 }
 
 export default App;
+

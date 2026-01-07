@@ -19,7 +19,7 @@ export default defineConfig({
     emptyOutDir: false,
     outDir: "dist/content",
     rollupOptions: {
-      input: "src/content.tsx",
+      input: "src/content/Content.tsx",
       output: {
         format: "iife",
         entryFileNames: "content.js",

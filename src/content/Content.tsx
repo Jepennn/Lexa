@@ -1,8 +1,8 @@
 // Now import and initialize React (this happens after listener is set up)
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { TooltipTranslation } from "./tooltipTranslation";
-  import contentStyles from "./content.css?inline";
+import { TooltipTranslation } from "./TooltipTranslation";
+import contentStyles from "./content.css?inline";
 
 // Create the host element
 const shadowHost = document.createElement("div");
@@ -27,3 +27,4 @@ createRoot(shadowContainer).render(
     <TooltipTranslation />
   </React.StrictMode>
 );
+

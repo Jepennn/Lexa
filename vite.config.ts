@@ -13,8 +13,8 @@ export default defineConfig({
     outDir: "dist/ui",
     rollupOptions: {
       input: {
-        main: resolve(__dirname, "index.html"),
-        serviceWorker: resolve(__dirname, "src/serviceWorker.ts"),
+        popup: resolve(__dirname, "popup.html"),
+        serviceWorker: resolve(__dirname, "src/background/serviceWorker.ts"),
         sidePanel: resolve(__dirname, "sidePanel.html"),
       },
 

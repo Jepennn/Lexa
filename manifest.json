@@ -7,13 +7,29 @@
     "default_popup": "dist/ui/popup.html",
     "default_icon": "images/icon.png"
   },
-  "side_panel": {
-    "default_path": "dist/ui/sidePanel.html"
-  },
   "icons": {
     "16": "images/icon.png",
     "48": "images/icon.png",
     "128": "images/icon.png"
+  },
+  "commands": {
+    "open-sidepanel": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+L",
+        "mac": "Command+Shift+L"
+      },
+      "description": "Open the Learnly side panel"
+    },
+    "translate-marked-text": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+Y",
+        "mac": "Command+Shift+Y"
+      },
+      "description": "Translate the marked text"
+    }
+  },
+  "side_panel": {
+    "default_path": "dist/ui/sidePanel.html"
   },
   "background": {
     "service_worker": "dist/ui/serviceWorker.js",

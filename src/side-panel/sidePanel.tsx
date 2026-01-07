@@ -7,4 +7,3 @@ createRoot(document.getElementById("root-side-panel")!).render(
     <div>Hello from side panel</div>
   </StrictMode>
 );
-

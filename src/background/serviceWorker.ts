@@ -1,5 +1,5 @@
 console.log("Service Worker loaded");
-import type { TranslationMessage } from "@/types";
+import type { TranslationMessage, TranslationShortcutMessage } from "@/types";
 
 // Create the context menu on install and initialize default settings
 chrome.runtime.onInstalled.addListener(() => {
@@ -69,4 +69,19 @@ chrome.runtime.onMessage.addListener((message, sender) => {
     chrome.sidePanel.open({ tabId: sender.tab.id });
   }
 });
+
+// Listen for commands
+chrome.commands.onCommand.addListener((command, tab) => {
+  if (command === "open-sidepanel" && tab?.id) {
+    chrome.sidePanel.open({ tabId: tab.id });
+  }
+
+  if (command === "translate-marked-text" && tab?.id) {
+    chrome.tabs.sendMessage(tab.id, {
+      action: "SHOW_TRANSLATION_SHORTCUT",
+    } as TranslationShortcutMessage);
+  }
+});
+
+
 

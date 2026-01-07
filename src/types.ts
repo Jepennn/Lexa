@@ -9,6 +9,10 @@ export type TranslationMessage = {
   lightMode: boolean;
 };
 
+export type TranslationShortcutMessage = {
+  action: string;
+};
+
 export type UserSettings = {
   targetLang: string;
   sourceLang: string;

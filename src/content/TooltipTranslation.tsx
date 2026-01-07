@@ -27,6 +27,115 @@ export function TooltipTranslation() {
   // Use the speech synthesis hook
   const { speak, cancel, isSpeaking } = useSpeechSynthesis();
 
+  // Extract translation logic into a reusable function
+  const performTranslation = async (message: TranslationMessage) => {
+    // Store the original text from the message
+    setOriginalText(message.text);
+
+    // Update settings from the message
+    setVoiceMode(message.voiceMode);
+    setDictionaryMode(message.dictionaryMode);
+    setSourceLang(message.sourceLang);
+
+    // Get the current selection position
+    const selection = window.getSelection();
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+
+      // Position the tooltip above the selected text
+      // Add scroll offsets to handle scrolled pages
+      setPosition({
+        x: rect.left + window.scrollX + rect.width / 2,
+        y: rect.top + window.scrollY,
+      });
+    }
+
+    // Show the overlay with loading state
+    setIsVisible(true);
+    setIsLoading(true);
+    setTranslatedText("");
+
+    try {
+      //Check if the user has the necessary capabilities to translate the text
+      const translatorCapabilities = await Translator.availability({
+        sourceLanguage: message.sourceLang,
+        targetLanguage: message.targetLang,
+      });
+
+      if (translatorCapabilities === "unavailable") {
+        console.warn("Translation capabilities unavailable");
+        setTranslatedText("Translation unavailable for this language");
+        setIsLoading(false);
+        return;
+      }
+
+      // Create translator (this might take time if model needs to be downloaded)
+      const translator = await Translator.create({
+        sourceLanguage: message.sourceLang,
+        targetLanguage: message.targetLang,
+      });
+
+      // Translate the text
+      const translated = await translator.translate(message.text);
+      setTranslatedText(translated);
+    } catch (error) {
+      console.error("Translation error:", error);
+      setTranslatedText("Translation failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const messageListener = async (message: TranslationMessage) => {
+      // Handle keyboard shortcut
+      if (message.action === "SHOW_TRANSLATION_SHORTCUT") {
+        const selection = window.getSelection();
+        const selectionText = selection?.toString().trim();
+
+        // If no selection text, just return
+        if (!selectionText) {
+          return;
+        }
+
+        const userSettings = await chrome.storage.sync.get([
+          "sourceLang",
+          "targetLang",
+          "voiceMode",
+          "dictionaryMode",
+          "lightMode",
+        ]);
+
+        // Call the translation function directly
+        await performTranslation({
+          action: "SHOW_TRANSLATION",
+          text: selectionText,
+          length: selectionText.length,
+          sourceLang: userSettings.sourceLang,
+          targetLang: userSettings.targetLang,
+          voiceMode: userSettings.voiceMode,
+          dictionaryMode: userSettings.dictionaryMode,
+          lightMode: userSettings.lightMode,
+        } as TranslationMessage);
+      }
+
+      // Handle context menu translation
+      if (message.action === "SHOW_TRANSLATION") {
+        await performTranslation(message);
+      }
+
+      return true; // Keep the message listener alive
+    };
+
+    chrome.runtime.onMessage.addListener(messageListener);
+
+    // Cleanup: remove listener when component unmounts
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener);
+    };
+  }, []); // Empty deps - set up once on mount
+
   // Handler functions for toolbar actions
   const handleSpeak = () => {
     if (originalText && sourceLang) {
@@ -55,78 +164,6 @@ export function TooltipTranslation() {
   };
 
   //TODO: Maybe move this logic to a custom hook
-  useEffect(() => {
-    const messageListener = async (message: TranslationMessage) => {
-      //Message 1
-      if (message.action === "SHOW_TRANSLATION") {
-        // Store the original text from the message
-        setOriginalText(message.text);
-
-        // Update settings from the message (sent by service worker)
-        setVoiceMode(message.voiceMode);
-        setDictionaryMode(message.dictionaryMode);
-        setSourceLang(message.sourceLang);
-
-        // Get the current selection position
-        const selection = window.getSelection();
-        if (selection && selection.rangeCount > 0) {
-          const range = selection.getRangeAt(0);
-          const rect = range.getBoundingClientRect();
-
-          // Position the tooltip above the selected text
-          // Add scroll offsets to handle scrolled pages
-          setPosition({
-            x: rect.left + window.scrollX + rect.width / 2,
-            y: rect.top + window.scrollY,
-          });
-        }
-
-        // Show the overlay with loading state
-        setIsVisible(true);
-        setIsLoading(true);
-        setTranslatedText("");
-
-        try {
-          //Check if the user has the necessary capabilities to translate the text
-          const translatorCapabilities = await Translator.availability({
-            sourceLanguage: message.sourceLang,
-            targetLanguage: message.targetLang,
-          });
-
-          if (translatorCapabilities === "unavailable") {
-            console.warn("Translation capabilities unavailable");
-            setTranslatedText("Translation unavailable for this language");
-            setIsLoading(false);
-            return;
-          }
-
-          // Create translator (this might take time if model needs to be downloaded)
-          const translator = await Translator.create({
-            sourceLanguage: message.sourceLang,
-            targetLanguage: message.targetLang,
-          });
-
-          // Translate the text
-          const translated = await translator.translate(message.text);
-          console.log("Translated text:", translated);
-          setTranslatedText(translated);
-        } catch (error) {
-          console.error("Translation error:", error);
-          setTranslatedText("Translation failed. Please try again.");
-        } finally {
-          setIsLoading(false);
-        }
-      }
-      return true; // Keep the message listener alive
-    };
-
-    chrome.runtime.onMessage.addListener(messageListener);
-
-    // Cleanup: remove listener when component unmounts
-    return () => {
-      chrome.runtime.onMessage.removeListener(messageListener);
-    };
-  }, []);
 
   //If no translation is requested, return no UI
   if (!isVisible) {
@@ -213,4 +250,3 @@ export function TooltipTranslation() {
     </div>
   );
 }
-

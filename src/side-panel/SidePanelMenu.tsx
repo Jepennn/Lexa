@@ -93,7 +93,7 @@ function MenuOption({ icon, label, onClick, colorClass }: MenuOptionProps) {
     >
       <div
         className={cn(
-          "flex items-center justify-center p-2 rounded-xl mr-4 transition-colors",
+          "flex items-center justify-center p-2 rounded-xl mr-3 transition-colors",
           colorClass
         )}
       >

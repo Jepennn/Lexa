@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+# Images assets for design purposes
+images/
 
 .env
 .env.local

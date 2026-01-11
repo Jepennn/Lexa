@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
-import { Dictionary } from "./Dictionary";
 import { NoAccessToAi } from "./NoAccessToAi";
 import { ProfileSettings } from "./ProfileSettings";
 
@@ -53,14 +52,6 @@ function App() {
         onNavigate={openView}
       >
         <ProfileSettings />
-      </Layout>
-    );
-  }
-
-  if (appView === "dictionary") {
-    return (
-      <Layout title="Dictionary" subtitle="Your saved words and phrases" onNavigate={openView}>
-        <Dictionary />
       </Layout>
     );
   }

@@ -56,12 +56,6 @@ export function Layout({ children, title, subtitle, onNavigate }: LayoutProps) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-[10px] cursor-pointer py-1.5 px-2"
-                onClick={() => onNavigate("dictionary")}
-              >
-                📚 Dictionary
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-[10px] cursor-pointer py-1.5 px-2"
                 onClick={() => onNavigate("settings")}
               >
                 ⚙️ Settings

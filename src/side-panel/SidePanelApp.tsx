@@ -22,7 +22,7 @@ export function SidePanelApp() {
 
   // Render other views with a Back Button layout
   return (
-    <div className="flex h-screen w-full flex-col bg-background">
+    <div className="flex h-screen w-full flex-col bg-background dark text-foreground">
       {/* Header for Pages */}
       <div className="flex items-center gap-2 p-4 border-b border-border bg-card shadow-xs z-10">
         <Button 

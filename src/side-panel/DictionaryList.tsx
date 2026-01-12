@@ -71,7 +71,7 @@ const getIconComponent = (iconName: string) => {
 };
 
 interface DictionaryListProps {
-  onSelectDictionary?: (id: string) => void;
+  onSelectDictionary?: (item: DictionaryItem) => void;
   className?: string;
 }
 
@@ -139,7 +139,7 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
             return (
               <div 
                   key={dict.id}
-                  onClick={() => onSelectDictionary?.(dict.id)}
+                  onClick={() => onSelectDictionary?.(dict)}
                   className="group relative cursor-pointer"
               >
                   <Card className="rounded-2xl border-border/40 shadow-xs hover:bg-accent/30 hover:border-border/60 transition-all duration-200 active:scale-[0.99]">

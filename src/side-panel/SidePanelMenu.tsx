@@ -9,7 +9,7 @@ interface SidePanelMenuProps {
 
 export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
   return (
-    <div className="flex h-full w-full flex-col bg-background">
+    <div className="flex h-full w-full flex-col bg-background dark text-foreground">
       {/* Header Section with Wave */}
       <div className="relative w-full bg-brand-gradient pb-12 pt-8 px-6 rounded-b-[40px] shadow-sm">
         <div className="flex flex-col items-center gap-3">

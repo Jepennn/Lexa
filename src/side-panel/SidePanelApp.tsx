@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SidePanelMenu } from "./SidePanelMenu";
-import { Dictionary } from "@/popup/Dictionary";
+import { Dictionary } from "./Dictionary";
 import { ProfileSettings } from "@/popup/ProfileSettings";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
 import { Button } from "@/components/ui/button";
@@ -22,7 +22,7 @@ export function SidePanelApp() {
 
   // Render other views with a Back Button layout
   return (
-    <div className="flex h-screen w-full flex-col bg-background">
+    <div className="flex h-screen w-full flex-col bg-background dark text-foreground">
       {/* Header for Pages */}
       <div className="flex items-center gap-2 p-4 border-b border-border bg-card shadow-xs z-10">
         <Button 

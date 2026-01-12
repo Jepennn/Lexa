@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Layout } from "@/components/Layout";
+import { Layout } from "./Layout";
 import { NoAccessToAi } from "./NoAccessToAi";
 import { ProfileSettings } from "./ProfileSettings";
 

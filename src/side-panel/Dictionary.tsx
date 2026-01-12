@@ -1,4 +1,4 @@
-import { DictionaryList } from "@/components/DictionaryList";
+import { DictionaryList } from "./DictionaryList";
 
 export function Dictionary() {
   return (

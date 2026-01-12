@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { SidePanelMenu } from "./SidePanelMenu";
-import { Dictionary } from "@/popup/Dictionary";
+import { Dictionary } from "./Dictionary";
 import { ProfileSettings } from "@/popup/ProfileSettings";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
 import { Button } from "@/components/ui/button";

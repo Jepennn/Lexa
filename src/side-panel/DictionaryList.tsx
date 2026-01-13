@@ -1,10 +1,22 @@
-import React, { useState } from 'react';
+import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Plus, Search, Book, MoreHorizontal, ChevronRight, Languages, Sparkles, GraduationCap, Heart, Zap, Flag, Bookmark, Globe, Star } from "lucide-react";
+import {
+  Plus,
+  Search,
+  Book,
+  ChevronRight,
+  GraduationCap,
+  Heart,
+  Zap,
+  Flag,
+  Bookmark,
+  Globe,
+  Star,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
-import { AddDictionaryForm, type NewDictionaryData } from './AddDictionaryForm';
+import { AddDictionaryForm, type NewDictionaryData } from "./AddDictionaryForm";
 
 // Types
 export interface DictionaryItem {
@@ -23,50 +35,58 @@ const MOCK_DICTIONARIES: DictionaryItem[] = [
     name: "Spanish Basics",
     description: "English → Spanish",
     count: 420,
-    color: "bg-orange-500",
+    color: "bg-brand-orange",
     icon: "globe",
-    lastUsed: "2 mins ago"
+    lastUsed: "2 mins ago",
   },
   {
     id: "2",
     name: "Tech Vocabulary",
     description: "Software Engineering terms",
     count: 85,
-    color: "bg-blue-500",
+    color: "bg-brand-blue",
     icon: "book",
-    lastUsed: "1 day ago"
+    lastUsed: "1 day ago",
   },
   {
     id: "3",
     name: "Saved Phrases",
     description: "Useful daily expressions",
     count: 24,
-    color: "bg-emerald-500",
+    color: "bg-brand-pink",
     icon: "star",
-    lastUsed: "5 days ago"
+    lastUsed: "5 days ago",
   },
-    {
+  {
     id: "4",
     name: "Grammar Rules",
     description: "Important rules to remember",
     count: 12,
-    color: "bg-purple-500",
+    color: "bg-brand-purple",
     icon: "graduation",
-    lastUsed: "1 week ago"
-  }
+    lastUsed: "1 week ago",
+  },
 ];
 
 const getIconComponent = (iconName: string) => {
   switch (iconName) {
-    case 'globe': return Globe;
-    case 'graduation': return GraduationCap;
-    case 'star': return Star;
-    case 'heart': return Heart;
-    case 'zap': return Zap;
-    case 'flag': return Flag;
-    case 'bookmark': return Bookmark;
-    case 'book': 
-    default: return Book;
+    case "globe":
+      return Globe;
+    case "graduation":
+      return GraduationCap;
+    case "star":
+      return Star;
+    case "heart":
+      return Heart;
+    case "zap":
+      return Zap;
+    case "flag":
+      return Flag;
+    case "bookmark":
+      return Bookmark;
+    case "book":
+    default:
+      return Book;
   }
 };
 
@@ -79,9 +99,10 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
   const [searchQuery, setSearchQuery] = useState("");
   const [isAdding, setIsAdding] = useState(false);
 
-  const filteredDictionaries = MOCK_DICTIONARIES.filter(dict => 
-    dict.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dict.description?.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredDictionaries = MOCK_DICTIONARIES.filter(
+    (dict) =>
+      dict.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      dict.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAddSubmit = (data: NewDictionaryData) => {
@@ -92,9 +113,9 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
 
   if (isAdding) {
     return (
-      <AddDictionaryForm 
-        onSubmit={handleAddSubmit} 
-        onCancel={() => setIsAdding(false)} 
+      <AddDictionaryForm
+        onSubmit={handleAddSubmit}
+        onCancel={() => setIsAdding(false)}
         className={className}
       />
     );
@@ -108,8 +129,8 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
           <h2 className="text-2xl font-bold tracking-tight text-foreground">Dictionaries</h2>
           <p className="text-xs text-muted-foreground font-medium">Manage your collections</p>
         </div>
-        <Button 
-          size="icon" 
+        <Button
+          size="icon"
           className="rounded-full h-9 w-9 shadow-sm bg-primary text-primary-foreground hover:bg-primary/90"
           onClick={() => setIsAdding(true)}
         >
@@ -123,7 +144,7 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground/70">
           <Search className="size-4" />
         </div>
-        <Input 
+        <Input
           className="pl-9 h-11 rounded-xl bg-secondary/30 border-none focus-visible:ring-1 focus-visible:ring-primary/50 text-base text-foreground"
           placeholder="Search..."
           value={searchQuery}
@@ -137,57 +158,61 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
           filteredDictionaries.map((dict) => {
             const IconComponent = getIconComponent(dict.icon);
             return (
-              <div 
-                  key={dict.id}
-                  onClick={() => onSelectDictionary?.(dict)}
-                  className="group relative cursor-pointer"
+              <div
+                key={dict.id}
+                onClick={() => onSelectDictionary?.(dict)}
+                className="group relative cursor-pointer"
               >
-                  <Card className="rounded-2xl border-border/40 shadow-xs hover:bg-accent/30 hover:border-border/60 transition-all duration-200 active:scale-[0.99]">
+                <Card className="rounded-2xl border-border/40 shadow-xs hover:bg-accent/30 hover:border-border/60 transition-all duration-200 active:scale-[0.99]">
                   <CardContent className="p-3.5 flex items-center gap-3.5">
-                      {/* Icon Container - iOS Style */}
-                      <div className={cn(
-                      "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-inner",
-                      dict.color
-                      )}>
+                    {/* Icon Container - iOS Style */}
+                    <div
+                      className={cn(
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-inner",
+                        dict.color
+                      )}
+                    >
                       <IconComponent className="text-white size-4" />
-                      </div>
+                    </div>
 
-                      {/* Content */}
-                      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 flex flex-col gap-0.5">
                       <div className="flex items-center justify-between">
-                          <span className="font-semibold text-base truncate text-foreground leading-tight">
+                        <span className="font-semibold text-base truncate text-foreground leading-tight">
                           {dict.name}
-                          </span>
-                          {dict.lastUsed && (
+                        </span>
+                        {dict.lastUsed && (
                           <span className="text-[10px] text-muted-foreground font-medium shrink-0 ml-2">
-                              {dict.lastUsed}
+                            {dict.lastUsed}
                           </span>
-                          )}
+                        )}
                       </div>
                       <div className="flex items-center gap-2">
-                           <span className="text-xs text-muted-foreground truncate font-medium">
+                        <span className="text-xs text-muted-foreground truncate font-medium">
                           {dict.description}
-                          </span>
+                        </span>
                       </div>
-                      </div>
+                    </div>
 
-                      {/* Chevron/Action */}
-                      <div className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors">
+                    {/* Chevron/Action */}
+                    <div className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors">
                       <ChevronRight className="size-5" />
-                      </div>
+                    </div>
                   </CardContent>
-                  </Card>
+                </Card>
               </div>
             );
           })
         ) : (
           <div className="flex flex-col items-center justify-center py-10 text-center space-y-3">
             <div className="bg-muted/50 p-4 rounded-full">
-                <Search className="size-6 text-muted-foreground" />
+              <Search className="size-6 text-muted-foreground" />
             </div>
             <div>
-                <p className="text-sm font-semibold text-foreground">No dictionaries found</p>
-                <p className="text-xs text-muted-foreground mt-1">Try searching for something else or create a new one.</p>
+              <p className="text-sm font-semibold text-foreground">No dictionaries found</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Try searching for something else or create a new one.
+              </p>
             </div>
           </div>
         )}

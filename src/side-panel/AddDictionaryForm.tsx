@@ -21,14 +21,15 @@ interface AddDictionaryFormProps {
 }
 
 const COLOR_OPTIONS = [
-  { value: "bg-orange-500", label: "Orange" },
-  { value: "bg-blue-500", label: "Blue" },
-  { value: "bg-emerald-500", label: "Emerald" },
-  { value: "bg-purple-500", label: "Purple" },
-  { value: "bg-pink-500", label: "Pink" },
-  { value: "bg-red-500", label: "Red" },
-  { value: "bg-indigo-500", label: "Indigo" },
-  { value: "bg-yellow-500", label: "Yellow" },
+  { value: "bg-brand-red", label: "Red" },
+  { value: "bg-brand-orange", label: "Orange" },
+  { value: "bg-brand-amber", label: "Amber" },
+  { value: "bg-brand-yellow", label: "Yellow" },
+  { value: "bg-brand-green", label: "Green" },
+  { value: "bg-brand-cyan", label: "Cyan" },
+  { value: "bg-brand-blue", label: "Blue" },
+  { value: "bg-brand-purple", label: "Purple" },
+  { value: "bg-brand-pink", label: "Pink" },
 ];
 
 const ICON_OPTIONS = [
@@ -46,7 +47,7 @@ export function AddDictionaryForm({ onSubmit, onCancel, className }: AddDictiona
   const [formData, setFormData] = useState<NewDictionaryData>({
     name: "",
     description: "",
-    color: "bg-blue-500",
+    color: "bg-brand-blue",
     icon: "book",
   });
 

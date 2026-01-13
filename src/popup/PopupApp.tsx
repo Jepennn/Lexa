@@ -1,8 +1,7 @@
-import { ArrowRightLeft, PanelRightOpen, Settings, Power } from "lucide-react";
+import { ArrowRightLeft, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 
 // Map language codes to names (simplified)
 const LANG_MAP: Record<string, string> = {
@@ -13,7 +12,7 @@ const LANG_MAP: Record<string, string> = {
   ja: "Japanese",
 };
 
-function App() {
+function PopupApp() {
   const userSettings = useGetUserSettings();
 
   const openSidePanel = async () => {
@@ -44,20 +43,20 @@ function App() {
   const targetName = userSettings ? LANG_MAP[userSettings.targetLang] || userSettings.targetLang.toUpperCase() : "...";
 
   return (
-    <div className="flex flex-col h-full w-full bg-background p-4 gap-4">
+    <div className="flex flex-col h-full w-full bg-background p-3 gap-3">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-6 w-6 bg-primary rounded-md flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-xs">L</span>
+          <div className="h-5 w-5 bg-primary rounded-md flex items-center justify-center">
+            <span className="text-primary-foreground font-bold text-[10px]">L</span>
           </div>
-          <span className="font-bold text-lg tracking-tight">Learnly</span>
+          <span className="font-bold text-base tracking-tight">Learnly</span>
         </div>
         <div className="flex items-center gap-1">
-             <div className="flex items-center gap-1.5 px-2 py-1 bg-green-500/10 rounded-full border border-green-500/20">
-                <span className="relative flex h-2 w-2">
+             <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20">
+                <span className="relative flex h-1.5 w-1.5">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
                 </span>
                 <span className="text-[10px] font-medium text-green-600 dark:text-green-400">Active</span>
             </div>
@@ -65,40 +64,40 @@ function App() {
       </div>
 
       {/* Main Actions Card */}
-      <Card className="p-4 flex flex-col gap-3 shadow-sm border-border/60">
+      <Card className="p-3 flex flex-col gap-2 shadow-sm border-border/60">
         <div className="flex items-center justify-between gap-2">
-           <div className="flex-1 flex flex-col items-center justify-center p-2 rounded-lg bg-secondary/30">
-              <span className="text-xs text-muted-foreground font-medium mb-1">From</span>
-              <span className="font-semibold text-sm">{sourceName}</span>
+           <div className="flex-1 flex flex-col items-center justify-center p-1.5 rounded-lg bg-secondary/30">
+              <span className="text-[10px] text-muted-foreground font-medium mb-0.5">From</span>
+              <span className="font-semibold text-xs">{sourceName}</span>
            </div>
            
            <Button 
             variant="ghost" 
             size="icon" 
-            className="h-8 w-8 rounded-full shrink-0 hover:bg-muted text-muted-foreground"
+            className="h-7 w-7 rounded-full shrink-0 hover:bg-muted text-muted-foreground"
             onClick={handleSwapLanguages}
            >
-             <ArrowRightLeft className="size-4" />
+             <ArrowRightLeft className="size-3.5" />
            </Button>
 
-           <div className="flex-1 flex flex-col items-center justify-center p-2 rounded-lg bg-secondary/30">
-              <span className="text-xs text-muted-foreground font-medium mb-1">To</span>
-              <span className="font-semibold text-sm">{targetName}</span>
+           <div className="flex-1 flex flex-col items-center justify-center p-1.5 rounded-lg bg-secondary/30">
+              <span className="text-[10px] text-muted-foreground font-medium mb-0.5">To</span>
+              <span className="font-semibold text-xs">{targetName}</span>
            </div>
         </div>
       </Card>
 
       {/* Primary Action */}
       <Button 
-        size="lg" 
-        className="w-full h-12 text-sm font-semibold shadow-sm gap-2"
+        variant="secondary"
+        className="w-full shadow-sm gap-2"
         onClick={openSidePanel}
       >
-        <PanelRightOpen className="size-4" />
-        Open Side Panel
+        <Settings className="size-4" />
+        Manage extension
       </Button>
       
-      {/* Footer Info */}
+    {/* Footer Info */}
       <p className="text-center text-[10px] text-muted-foreground/60">
         Select text on any page to translate instantly.
       </p>
@@ -106,4 +105,4 @@ function App() {
   );
 }
 
-export default App;
+export default PopupApp;

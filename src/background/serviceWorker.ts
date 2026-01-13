@@ -63,10 +63,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-// Listen for messages from the content script
+// Listen for messages from the content script and popup
 chrome.runtime.onMessage.addListener((message, sender) => {
-  if (message.action === "OPEN_SIDE_PANEL" && sender.tab?.id) {
-    chrome.sidePanel.open({ tabId: sender.tab.id });
+  if (message.action === "OPEN_SIDE_PANEL") {
+    // Prefer the explicit tabId from the message (sent by popup), 
+    // fallback to sender.tab.id (sent by content script)
+    const tabId = message.tabId || sender.tab?.id;
+
+    if (tabId) {
+      chrome.sidePanel.open({ tabId });
+    }
   }
 });
 

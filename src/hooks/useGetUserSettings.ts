@@ -6,6 +6,7 @@ type UserSettings = {
   voiceMode: boolean;
   dictionaryMode: boolean;
   lightMode: boolean;
+  hasSeenOnboarding: boolean;
 };
 
 export function useGetUserSettings() {
@@ -20,6 +21,7 @@ export function useGetUserSettings() {
         voiceMode: typeof result.voiceMode === "boolean" ? result.voiceMode : true,
         dictionaryMode: typeof result.dictionaryMode === "boolean" ? result.dictionaryMode : true,
         lightMode: typeof result.lightMode === "boolean" ? result.lightMode : true,
+        hasSeenOnboarding: typeof result.hasSeenOnboarding === "boolean" ? result.hasSeenOnboarding : false,
       });
     });
 

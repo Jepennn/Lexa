@@ -1,18 +1,37 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SidePanelMenu } from "./SidePanelMenu";
 import { Dictionary } from "./Dictionary";
+import { Onboarding } from "./Onboarding";
 import { ProfileSettings } from "@/popup/ProfileSettings";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
+import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import type { AppViews } from "@/types";
 
 export function SidePanelApp() {
   const [currentView, setCurrentView] = useState<AppViews | "menu">("menu");
   const [hasAccessAI] = useState("Translator" in window);
+  const userSettings = useGetUserSettings();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    if (userSettings && userSettings.hasSeenOnboarding === false) {
+      setShowOnboarding(true);
+    }
+  }, [userSettings]);
   
+  const handleOnboardingComplete = () => {
+    chrome.storage.sync.set({ hasSeenOnboarding: true });
+    setShowOnboarding(false);
+  };
+
   if (!hasAccessAI) {
     return <NoAccessToAi />;
+  }
+
+  if (showOnboarding) {
+    return <Onboarding onComplete={handleOnboardingComplete} />;
   }
 
   // Render the Menu View

@@ -18,7 +18,6 @@ export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
           </div>
           <div className="text-center">
             <h1 className="text-xl font-bold text-stone-950">Learnly</h1>
-            <p className="text-xs font-medium text-stone-900/80">Premium User • Lv. 3</p>
           </div>
 
           {/* Stats Row (Cosmetic based on inspiration) */}
@@ -63,14 +62,6 @@ export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
           label="Settings"
           onClick={() => onNavigate("settings")}
           colorClass="text-primary bg-primary/10 group-hover:bg-primary/20"
-        />
-
-        {/* Placeholder for future options to match list length in inspiration */}
-        <MenuOption
-          icon={<MessageSquare className="size-5" />}
-          label="History (Coming Soon)"
-          onClick={() => {}}
-          colorClass="text-muted-foreground bg-muted group-hover:bg-muted/80 opacity-60 cursor-not-allowed"
         />
       </div>
     </div>

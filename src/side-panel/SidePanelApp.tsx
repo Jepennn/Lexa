@@ -20,7 +20,7 @@ export function SidePanelApp() {
       setShowOnboarding(true);
     }
   }, [userSettings]);
-  
+
   const handleOnboardingComplete = () => {
     chrome.storage.sync.set({ hasSeenOnboarding: true });
     setShowOnboarding(false);
@@ -29,7 +29,6 @@ export function SidePanelApp() {
   if (!hasAccessAI) {
     return <NoAccessToAi />;
   }
-
   if (showOnboarding) {
     return <Onboarding onComplete={handleOnboardingComplete} />;
   }
@@ -44,10 +43,10 @@ export function SidePanelApp() {
     <div className="flex h-screen w-full flex-col bg-background dark text-foreground">
       {/* Header for Pages */}
       <div className="flex items-center gap-2 p-4 border-b border-border bg-card shadow-xs z-10">
-        <Button 
-          variant="secondary" 
-          size="icon" 
-          className="h-8 w-8 rounded-full bg-muted text-foreground hover:bg-muted/80 shadow-sm" 
+        <Button
+          variant="secondary"
+          size="icon"
+          className="h-8 w-8 rounded-full bg-muted text-foreground hover:bg-muted/80 shadow-sm"
           onClick={() => setCurrentView("menu")}
         >
           <ChevronLeft className="size-5" />

@@ -13,6 +13,7 @@ export function TooltipTranslation() {
   const [translatedText, setTranslatedText] = useState<string>("");
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isDownloading, setIsDownloading] = useState<boolean>(false);
 
   // Store user settings from the message
   const [voiceMode, setVoiceMode] = useState<boolean>(true);
@@ -54,6 +55,7 @@ export function TooltipTranslation() {
     // Show the overlay with loading state
     setIsVisible(true);
     setIsLoading(true);
+    setIsDownloading(false);
     setTranslatedText("");
 
     try {
@@ -74,6 +76,11 @@ export function TooltipTranslation() {
       const translator = await Translator.create({
         sourceLanguage: message.sourceLang,
         targetLanguage: message.targetLang,
+        monitor(m) {
+          m.addEventListener("downloadprogress", () => {
+            setIsDownloading(true);
+          });
+        },
       });
 
       // Translate the text
@@ -84,6 +91,7 @@ export function TooltipTranslation() {
       setTranslatedText("Translation failed. Please try again.");
     } finally {
       setIsLoading(false);
+      setIsDownloading(false);
     }
   };
 
@@ -240,7 +248,9 @@ export function TooltipTranslation() {
           {isLoading ? (
             <div className="flex items-center gap-2 py-2">
               <Spinner className="size-4 text-primary" />
-              <p className="text-sm text-muted-foreground">Translating...</p>
+              <p className="text-sm text-muted-foreground">
+                {isDownloading ? "Downloading language model..." : "Translating..."}
+              </p>
             </div>
           ) : (
             <p className="text-sm leading-relaxed text-foreground">{translatedText}</p>

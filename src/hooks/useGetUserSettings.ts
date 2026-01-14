@@ -9,19 +9,25 @@ type UserSettings = {
   hasSeenOnboarding: boolean;
 };
 
+//For handling 
+const DEFAULT_SETTINGS: UserSettings = {
+  targetLang: "sv",
+  sourceLang: "en",
+  voiceMode: true,
+  dictionaryMode: true,
+  lightMode: true,
+  hasSeenOnboarding: false,
+};
+
 export function useGetUserSettings() {
-  const [settings, setSettings] = useState<UserSettings | null>(null);
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
 
   useEffect(() => {
     // initial load
     chrome.storage.sync.get(null, (result) => {
       setSettings({
-        targetLang: typeof result.targetLang === "string" ? result.targetLang : "sv",
-        sourceLang: typeof result.sourceLang === "string" ? result.sourceLang : "en",
-        voiceMode: typeof result.voiceMode === "boolean" ? result.voiceMode : true,
-        dictionaryMode: typeof result.dictionaryMode === "boolean" ? result.dictionaryMode : true,
-        lightMode: typeof result.lightMode === "boolean" ? result.lightMode : true,
-        hasSeenOnboarding: typeof result.hasSeenOnboarding === "boolean" ? result.hasSeenOnboarding : false,
+        ...DEFAULT_SETTINGS,
+        ...result,
       });
     });
 
@@ -33,7 +39,7 @@ export function useGetUserSettings() {
       if (area !== "sync") return;
 
       setSettings((prev) => ({
-        ...prev!,
+        ...prev,
         ...Object.fromEntries(
           Object.entries(changes).map(([key, { newValue }]) => [key, newValue])
         ),

@@ -1,14 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Book, Settings, Languages, MessageSquare } from "lucide-react";
-import type { AppViews } from "@/types";
+import type { sidepanelViews } from "@/types";
 import { cn } from "@/lib/utils";
 
 interface SidePanelMenuProps {
-  onNavigate: (view: AppViews) => void;
+  onNavigate: (view: sidepanelViews) => void;
 }
 
 export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
   return (
+    //TODO: Think what data should be displayed here, and change from the boring gray white gradient style.
     <div className="flex h-full w-full flex-col bg-background dark text-foreground">
       {/* Header Section with Wave */}
       <div className="relative w-full bg-brand-gradient pb-12 pt-8 px-6 rounded-b-[40px] shadow-sm">

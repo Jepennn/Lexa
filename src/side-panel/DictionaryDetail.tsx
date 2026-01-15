@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
@@ -9,43 +9,10 @@ import {
   Settings2,
   Filter
 } from "lucide-react";
-import { WordCard, type WordItem } from "./WordCard";
+import { WordCard } from "./WordCard";
 import { AddWordForm, type NewWordData } from "./AddWordForm";
-
-// Mock Data (Replace with real data later)
-const MOCK_WORDS: WordItem[] = [
-  {
-    id: "1",
-    original: "Hola",
-    translation: "Hello",
-    example: "Hola, ¿cómo estás?",
-    isFavorite: true,
-    createdAt: "2024-01-12",
-  },
-  {
-    id: "2",
-    original: "Gato",
-    translation: "Cat",
-    example: "El gato duerme en el sofá.",
-    isFavorite: false,
-    createdAt: "2024-01-13",
-  },
-  {
-    id: "3",
-    original: "Programación",
-    translation: "Programming",
-    isFavorite: true,
-    createdAt: "2024-01-14",
-  },
-  {
-    id: "4",
-    original: "Desayuno",
-    translation: "Breakfast",
-    example: "Me gusta comer huevos para el desayuno.",
-    isFavorite: false,
-    createdAt: "2024-01-15",
-  },
-];
+import { getEntries, addEntry, deleteEntry } from "@/lib/storage";
+import type { DictionaryEntry } from "@/types";
 
 interface DictionaryDetailProps {
   dictionaryId: string;
@@ -55,37 +22,68 @@ interface DictionaryDetailProps {
 }
 
 export function DictionaryDetail({ 
+  dictionaryId,
   dictionaryName, 
   color,
   onBack 
 }: DictionaryDetailProps) {
   const [searchQuery, setSearchQuery] = useState("");
-  const [words, setWords] = useState<WordItem[]>(MOCK_WORDS);
+  const [words, setWords] = useState<DictionaryEntry[]>([]);
   const [isAddingWord, setIsAddingWord] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadWords = async () => {
+      setIsLoading(true);
+      try {
+        const entries = await getEntries(dictionaryId);
+        setWords(entries);
+      } catch (error) {
+        console.error("Failed to load words:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadWords();
+  }, [dictionaryId]);
+
+  const loadWords = async () => {
+    setIsLoading(true);
+    try {
+      const entries = await getEntries(dictionaryId);
+      setWords(entries);
+    } catch (error) {
+      console.error("Failed to load words:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredWords = words.filter(
     (w) =>
-      w.original.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      w.text.toLowerCase().includes(searchQuery.toLowerCase()) ||
       w.translation.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleToggleFavorite = (id: string) => {
-    setWords(words.map(w => w.id === id ? { ...w, isFavorite: !w.isFavorite } : w));
+  // Delete a word from the dictionary
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteEntry(dictionaryId, id);
+      await loadWords();
+    } catch (error) {
+      console.error("Failed to delete word:", error);
+    }
   };
 
-  const handleDelete = (id: string) => {
-    setWords(words.filter(w => w.id !== id));
-  };
-
-  const handleAddWord = (data: NewWordData) => {
-    const newWord: WordItem = {
-      id: crypto.randomUUID(),
-      ...data,
-      isFavorite: false,
-      createdAt: new Date().toISOString().split('T')[0],
-    };
-    setWords([newWord, ...words]);
-    setIsAddingWord(false);
+  // Add a new word to the dictionary
+  const handleAddWord = async (data: NewWordData) => {
+    try {
+      await addEntry(dictionaryId, data.original, data.translation);
+      await loadWords();
+      setIsAddingWord(false);
+    } catch (error) {
+      console.error("Failed to add word:", error);
+    }
   };
 
   if (isAddingWord) {
@@ -132,7 +130,7 @@ export function DictionaryDetail({
               {dictionaryName}
             </h2>
             <p className="text-xs text-muted-foreground font-medium">
-              {words.length} words • Last studied today
+              {words.length} words
             </p>
           </div>
 
@@ -178,15 +176,17 @@ export function DictionaryDetail({
       {/* --- Scrollable Content --- */}
       <div className="flex-1 overflow-y-auto">
         <div className="p-4 space-y-3 pb-20">
-          {filteredWords.length > 0 ? (
+          {isLoading ? (
+             <div className="flex justify-center py-10">
+               <p className="text-sm text-muted-foreground">Loading words...</p>
+             </div>
+          ) : filteredWords.length > 0 ? (
             filteredWords.map((word) => (
               <WordCard 
                 key={word.id} 
                 word={word} 
                 onPlayAudio={(text) => console.log("Playing:", text)}
                 onDelete={handleDelete}
-                onToggleFavorite={handleToggleFavorite}
-                onEdit={(id) => console.log("Edit:", id)}
               />
             ))
           ) : (

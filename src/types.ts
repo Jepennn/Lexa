@@ -29,7 +29,7 @@ export type IntroductionStep = {
 };
 
 //Views for the app
-export type sidepanelViews = "introduction" | "settings" | "dictionary" | "menu";
+export type sidepanelViews = "menu" | "settings" | "dictionary";
 
 export type DictionaryIcon =
   | "book"

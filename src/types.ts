@@ -29,4 +29,41 @@ export type IntroductionStep = {
 };
 
 //Views for the app
-export type AppViews = "introduction" | "settings" | "dictionary";
+export type sidepanelViews = "menu" | "settings" | "dictionary";
+
+export type DictionaryIcon =
+  | "book"
+  | "globe"
+  | "star"
+  | "graduation"
+  | "zap"
+  | "heart"
+  | "flag"
+  | "bookmark";
+export type DictionaryColor =
+  | "bg-brand-orange"
+  | "bg-brand-blue"
+  | "bg-brand-pink"
+  | "bg-brand-purple"
+  | "bg-brand-green"
+  | "bg-brand-yellow";
+
+export interface Dictionary {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: number;
+  updatedAt: number;
+  icon: DictionaryIcon;
+  color: DictionaryColor;
+}
+
+export interface DictionaryEntry {
+  id: string;
+  dictionaryId: string;
+  text: string;
+  translation: string;
+  createdAt: number;
+}
+
+export type DictionariesStorage = Record<string, Dictionary>;

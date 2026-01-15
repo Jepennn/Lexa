@@ -11,6 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
       voiceMode: result.voiceMode ?? true, // Voice mode enabled by default
       dictionaryMode: result.dictionaryMode ?? true, // Dictionary mode enabled by default
       lightMode: result.lightMode ?? true, // Light mode enabled by default
+      hasSeenOnboarding: result.hasSeenOnboarding ?? false, // Onboarding not seen by default
     };
 
     //Set the default settings when the extension is installed

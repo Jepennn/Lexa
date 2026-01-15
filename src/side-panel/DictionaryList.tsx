@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -17,56 +17,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AddDictionaryForm, type NewDictionaryData } from "./AddDictionaryForm";
-
-// Types
-export interface DictionaryItem {
-  id: string;
-  name: string;
-  description?: string;
-  count: number;
-  color: string; // Tailwind class for background
-  icon: string;
-  lastUsed?: string;
-}
-
-const MOCK_DICTIONARIES: DictionaryItem[] = [
-  {
-    id: "1",
-    name: "Spanish Basics",
-    description: "English → Spanish",
-    count: 420,
-    color: "bg-brand-orange",
-    icon: "globe",
-    lastUsed: "2 mins ago",
-  },
-  {
-    id: "2",
-    name: "Tech Vocabulary",
-    description: "Software Engineering terms",
-    count: 85,
-    color: "bg-brand-blue",
-    icon: "book",
-    lastUsed: "1 day ago",
-  },
-  {
-    id: "3",
-    name: "Saved Phrases",
-    description: "Useful daily expressions",
-    count: 24,
-    color: "bg-brand-pink",
-    icon: "star",
-    lastUsed: "5 days ago",
-  },
-  {
-    id: "4",
-    name: "Grammar Rules",
-    description: "Important rules to remember",
-    count: 12,
-    color: "bg-brand-purple",
-    icon: "graduation",
-    lastUsed: "1 week ago",
-  },
-];
+import { getDictionaries, createDictionary } from "@/lib/storage";
+import type { Dictionary, DictionaryIcon, DictionaryColor } from "@/types";
 
 const getIconComponent = (iconName: string) => {
   switch (iconName) {
@@ -91,24 +43,51 @@ const getIconComponent = (iconName: string) => {
 };
 
 interface DictionaryListProps {
-  onSelectDictionary?: (item: DictionaryItem) => void;
+  onSelectDictionary?: (item: Dictionary) => void;
   className?: string;
 }
 
 export function DictionaryList({ onSelectDictionary, className }: DictionaryListProps) {
+  const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isAdding, setIsAdding] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const filteredDictionaries = MOCK_DICTIONARIES.filter(
+  useEffect(() => {
+    loadDictionaries();
+  }, []);
+
+  const loadDictionaries = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getDictionaries();
+      setDictionaries(data);
+    } catch (error) {
+      console.error("Failed to load dictionaries:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredDictionaries = dictionaries.filter(
     (dict) =>
       dict.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       dict.description?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const handleAddSubmit = (data: NewDictionaryData) => {
-    console.log("New Dictionary Data:", data);
-    setIsAdding(false);
-    // Here you would typically add the new dictionary to your state/backend
+  const handleAddSubmit = async (data: NewDictionaryData) => {
+    try {
+      await createDictionary(
+        data.name,
+        data.description,
+        data.icon as DictionaryIcon,
+        data.color as DictionaryColor
+      );
+      await loadDictionaries();
+      setIsAdding(false);
+    } catch (error) {
+      console.error("Failed to create dictionary:", error);
+    }
   };
 
   if (isAdding) {
@@ -154,7 +133,11 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
 
       {/* Dictionary List */}
       <div className="flex-1 space-y-3 overflow-y-auto pb-6">
-        {filteredDictionaries.length > 0 ? (
+        {isLoading ? (
+          <div className="flex justify-center py-10">
+            <p className="text-sm text-muted-foreground">Loading dictionaries...</p>
+          </div>
+        ) : filteredDictionaries.length > 0 ? (
           filteredDictionaries.map((dict) => {
             const IconComponent = getIconComponent(dict.icon);
             return (
@@ -177,15 +160,10 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
 
                     {/* Content */}
                     <div className="flex-1 min-w-0 flex flex-col gap-0.5">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col items-start justify-between">
                         <span className="font-semibold text-base truncate text-foreground leading-tight">
                           {dict.name}
                         </span>
-                        {dict.lastUsed && (
-                          <span className="text-[10px] text-muted-foreground font-medium shrink-0 ml-2">
-                            {dict.lastUsed}
-                          </span>
-                        )}
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-xs text-muted-foreground truncate font-medium">

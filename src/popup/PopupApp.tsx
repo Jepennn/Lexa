@@ -2,8 +2,10 @@ import { ArrowRightLeft, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import { Card } from "@/components/ui/card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
+import { OnboardingRedirect } from "@/popup/OnboardingRedirect";
+import { Spinner } from "@/components/ui/spinner";
 
 // Map language codes to names (simplified)
 const LANG_MAP: Record<string, string> = {
@@ -16,8 +18,26 @@ const LANG_MAP: Record<string, string> = {
 
 function PopupApp() {
   const [hasAccessAI] = useState("Translator" in window);
+  const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const userSettings = useGetUserSettings();
 
+  // Check if the user has seen the onboarding
+  useEffect(() => {
+    chrome.storage.sync.get(["hasSeenOnboarding"], (result) => {
+      setShowOnboarding(result.hasSeenOnboarding !== true);
+    });
+  }, []);
+
+  // Show a loading state while checking storage to prevent flicker
+  if (showOnboarding === null) {
+    return (
+      <div className="flex items-center justify-center h-[220px] w-full bg-background">
+        <Spinner className="size-6 text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // If the user does not have access to the AI, show the no access to ai componen
   if (!hasAccessAI) {
     return <NoAccessToAi />;
   }
@@ -36,6 +56,10 @@ function PopupApp() {
       window.close();
     }
   };
+
+  if (showOnboarding) {
+    return <OnboardingRedirect onOpenSidePanel={openSidePanel} />;
+  }
 
   const handleSwapLanguages = () => {
     if (!userSettings) return;

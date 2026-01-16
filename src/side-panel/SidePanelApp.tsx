@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { SidePanelMenu } from "./SidePanelMenu";
 import { Dictionary } from "./Dictionary";
+import { Practice } from "./Practice";
 import { Onboarding } from "./Onboarding";
 import { ProfileSettings } from "@/popup/ProfileSettings";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
@@ -42,6 +43,12 @@ export function SidePanelApp() {
       return (
         <SidePanelLayout title="Dictionary" onBack={() => setCurrentView("menu")}>
           <Dictionary />
+        </SidePanelLayout>
+      );
+    case "practice":
+      return (
+        <SidePanelLayout title="Practice" onBack={() => setCurrentView("menu")}>
+          <Practice onOpenDictionary={() => setCurrentView("dictionary")} />
         </SidePanelLayout>
       );
     default:

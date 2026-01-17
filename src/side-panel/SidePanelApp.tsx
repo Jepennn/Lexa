@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SidePanelMenu } from "./SidePanelMenu";
 import { Dictionary } from "./Dictionary";
-import { Practice } from "./Practice";
+import { Flashcard } from "./Flashcard";
 import { Onboarding } from "./Onboarding";
 import { ProfileSettings } from "@/popup/ProfileSettings";
 import { NoAccessToAi } from "@/popup/NoAccessToAi";
@@ -45,10 +45,10 @@ export function SidePanelApp() {
           <Dictionary />
         </SidePanelLayout>
       );
-    case "practice":
+    case "flashcards":
       return (
-        <SidePanelLayout title="Practice" onBack={() => setCurrentView("menu")}>
-          <Practice onOpenDictionary={() => setCurrentView("dictionary")} />
+        <SidePanelLayout title="Flashcards" onBack={() => setCurrentView("menu")}>
+          <Flashcard onOpenDictionary={() => setCurrentView("dictionary")} />
         </SidePanelLayout>
       );
     default:

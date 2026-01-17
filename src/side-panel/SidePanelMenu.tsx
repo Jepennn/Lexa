@@ -104,8 +104,8 @@ export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
         />
         <MenuOption
           icon={<BookOpen className="size-5" />}
-          label="Practice"
-          onClick={() => onNavigate("practice")}
+          label="Flashcards"
+          onClick={() => onNavigate("flashcards")}
           colorClass="text-primary bg-primary/10 group-hover:bg-primary/20"
         />
         <MenuOption

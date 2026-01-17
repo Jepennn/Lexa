@@ -2,11 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Sparkles } from "lucide-react";
 
-type PracticeProps = {
+type FlashcardProps = {
   onOpenDictionary?: () => void;
 };
 
-export function Practice({ onOpenDictionary }: PracticeProps) {
+export function Flashcard({ onOpenDictionary }: FlashcardProps) {
   return (
     <div className="flex h-full w-full flex-col gap-4">
       <Card className="rounded-2xl border-border/40 shadow-xs">
@@ -42,3 +42,4 @@ export function Practice({ onOpenDictionary }: PracticeProps) {
     </div>
   );
 }
+

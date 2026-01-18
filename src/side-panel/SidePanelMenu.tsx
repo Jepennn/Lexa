@@ -95,7 +95,7 @@ export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
       </div>
 
       {/* Menu Options */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 mt-2">
+      <div className="flex-1 overflow-y-auto scrollbar-dark p-4 space-y-3 mt-2">
         <MenuOption
           icon={<Book className="size-5" />}
           label="Dictionary"

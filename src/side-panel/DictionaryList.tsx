@@ -132,7 +132,7 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
       </div>
 
       {/* Dictionary List */}
-      <div className="flex-1 space-y-3 overflow-y-auto pb-6">
+      <div className="flex-1 space-y-3 overflow-y-auto scrollbar-dark pb-6">
         {isLoading ? (
           <div className="flex justify-center py-10">
             <p className="text-sm text-muted-foreground">Loading dictionaries...</p>

@@ -174,7 +174,7 @@ export function DictionaryDetail({
       </div>
 
       {/* --- Scrollable Content --- */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-dark">
         <div className="p-4 space-y-3 pb-20">
           {isLoading ? (
              <div className="flex justify-center py-10">

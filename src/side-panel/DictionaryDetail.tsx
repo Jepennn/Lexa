@@ -5,8 +5,6 @@ import {
   ChevronLeft, 
   Plus, 
   Search, 
-  Brain, 
-  Settings2,
   Filter
 } from "lucide-react";
 import { WordCard } from "./WordCard";
@@ -111,46 +109,37 @@ export function DictionaryDetail({
   return (
     <div className="flex flex-col h-full w-full bg-background dark text-foreground">
       {/* --- Sticky Header & Toolbar --- */}
+
+      <span>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onBack}
+          className="text-muted-foreground"
+        >
+          ← Back
+        </Button>
+      </span>
+
       <div className="flex flex-col gap-4 p-4 border-b border-border bg-background/95 backdrop-blur-sm sticky top-0 z-10">
-        
         {/* Navigation & Title */}
-        <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onBack}
-            className="h-9 w-9 rounded-full hover:bg-muted text-primary"
-          >
-            <ChevronLeft className="size-5" />
-          </Button>
-          
-          <div className="flex-1 min-w-0">
-            <h2 className="text-xl font-bold tracking-tight truncate flex items-center gap-2 text-primary">
+        <div className="flex items-center justify-between w-full">        
+          <div className="flex-1 min-w-0 ">
+            <h2 className="text-xl font-bold tracking-tight truncate text-center flex items-center gap-2 text-primary">
               <span className={`h-3 w-3 rounded-full ${color}`} />
               {dictionaryName}
             </h2>
-            <p className="text-xs text-muted-foreground font-medium">
-              {words.length} words
-            </p>
           </div>
-
-          <Button variant="ghost" size="icon" className="h-9 w-9 text-muted-foreground">
-            <Settings2 className="size-5" />
-          </Button>
         </div>
 
         {/* Primary Actions Toolbar */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center ">
           <Button 
             className="flex-1 h-9 shadow-xs gap-2 font-semibold"
             onClick={() => setIsAddingWord(true)}
           >
             <Plus className="size-4" />
             Add Word
-          </Button>
-          <Button variant="secondary" className="flex-1 h-9 shadow-xs gap-2 font-semibold text-primary bg-primary/10 hover:bg-primary/20 border-transparent">
-            <Brain className="size-4" />
-            Practice
           </Button>
         </div>
 

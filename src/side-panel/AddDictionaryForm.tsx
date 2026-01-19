@@ -58,9 +58,20 @@ export function AddDictionaryForm({ onSubmit, onCancel, className }: AddDictiona
   };
 
   return (
-    <Card className={cn("w-full border-none shadow-none bg-background", className)}>
-      <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6 px-0 pt-4">
+    <div className="flex flex-col h-full w-full bg-background dark text-foreground">
+      <div className="mb-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={onCancel}
+          className="text-muted-foreground -ml-2"
+        >
+          ← Back
+        </Button>
+      </div>
+      <Card className={cn("w-full border-none shadow-none bg-background", className)}>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-6 px-0">
           
           {/* Name Field */}
           <div className="space-y-2">
@@ -164,5 +175,6 @@ export function AddDictionaryForm({ onSubmit, onCancel, className }: AddDictiona
         </CardFooter>
       </form>
     </Card>
+    </div>
   );
 }

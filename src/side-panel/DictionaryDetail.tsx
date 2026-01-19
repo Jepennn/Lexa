@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
-  ChevronLeft, 
   Plus, 
   Search, 
   Filter
@@ -86,17 +85,16 @@ export function DictionaryDetail({
 
   if (isAddingWord) {
     return (
-      <div className="flex flex-col h-full w-full bg-background p-4 dark text-foreground">
-        <div className="flex items-center gap-3 mb-6">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+      <div className="flex flex-col h-full w-full bg-background dark text-foreground">
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={() => setIsAddingWord(false)}
-            className="h-9 w-9 rounded-full hover:bg-muted text-primary"
+            className="text-muted-foreground -ml-2"
           >
-            <ChevronLeft className="size-5" />
+            ← Back
           </Button>
-          <h2 className="text-xl font-bold tracking-tight text-primary">Add New Word</h2>
         </div>
         <AddWordForm 
           onSubmit={handleAddWord} 

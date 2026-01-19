@@ -29,9 +29,9 @@ export function AddWordForm({ onSubmit, onCancel, className }: AddWordFormProps)
   };
 
   return (
-    <Card className={cn("w-full border-none shadow-none bg-background dark text-foreground", className)}>
+    <Card className={cn("w-full border-none shadow-none bg-background dark text-foreground py-2", className)}>
       <form onSubmit={handleSubmit}>
-        <CardContent className="space-y-6 px-0 pt-4">
+        <CardContent className="space-y-6 px-0">
           
           {/* Original Word */}
           <div className="space-y-2">

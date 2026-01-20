@@ -14,10 +14,18 @@ import {
   Bookmark,
   Globe,
   Star,
+  MoreHorizontal,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AddDictionaryForm, type NewDictionaryData } from "./AddDictionaryForm";
-import { getDictionaries, createDictionary } from "@/lib/storage";
+import { getDictionaries, createDictionary, deleteDictionary } from "@/lib/storage";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { Dictionary, DictionaryIcon, DictionaryColor } from "@/types";
 
 const getIconComponent = (iconName: string) => {
@@ -90,6 +98,16 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
     }
   };
 
+  const handleDeleteDictionary = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    try {
+      await deleteDictionary(id);
+      await loadDictionaries();
+    } catch (error) {
+      console.error("Failed to delete dictionary:", error);
+    }
+  };
+
   if (isAdding) {
     return (
       <AddDictionaryForm
@@ -148,7 +166,7 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
               >
                 <Card className="rounded-2xl border-border/40 shadow-xs hover:bg-accent/30 hover:border-border/60 transition-all duration-200 active:scale-[0.99]">
                   <CardContent className="p-3.5 flex items-center gap-3.5">
-                    {/* Icon Container - iOS Style */}
+
                     <div
                       className={cn(
                         "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-inner",
@@ -172,11 +190,37 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
                       </div>
                     </div>
 
-                    {/* Chevron/Action */}
+
                     <div className="text-muted-foreground/30 group-hover:text-muted-foreground/60 transition-colors">
                       <ChevronRight className="size-5" />
                     </div>
                   </CardContent>
+
+                   {/* Absolute Positioned Menu (Top Right) */}
+                   <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="h-6 w-6 rounded-full bg-background/80 backdrop-blur-sm shadow-sm hover:bg-background ring-offset-0 focus-visible:ring-0 focus-visible:outline-none"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <MoreHorizontal className="size-3.5" />
+                            <span className="sr-only">More options</span>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-32">
+                          <DropdownMenuItem 
+                            onClick={(e) => handleDeleteDictionary(e, dict.id)} 
+                            className="gap-2 text-destructive focus:text-destructive cursor-pointer"
+                          >
+                            <Trash2 className="size-3.5" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
                 </Card>
               </div>
             );

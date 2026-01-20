@@ -39,7 +39,7 @@ export function DictionaryDetail({
     try {
       const entries = await getEntries(dictionaryId);
       setWords(entries);
-    } catch (err) {
+    } catch {
       setError("Failed to load words. Please try again.");
     } finally {
       setIsLoading(false);

@@ -5,7 +5,6 @@ type UserSettings = {
   sourceLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
-  lightMode: boolean;
   hasSeenOnboarding: boolean;
 };
 
@@ -15,7 +14,6 @@ const DEFAULT_SETTINGS: UserSettings = {
   sourceLang: "en",
   voiceMode: true,
   dictionaryMode: true,
-  lightMode: true,
   hasSeenOnboarding: false,
 };
 

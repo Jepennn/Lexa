@@ -8,7 +8,7 @@ import { AlertCircle } from "lucide-react";
 type Language = "sv" | "fr" | "es" | "ja" | "en" | "";
 
 type SwitchOption = {
-  id: "voiceMode" | "dictionaryMode" | "lightMode";
+  id: "voiceMode" | "dictionaryMode";
   label: string;
   description: string;
 };
@@ -23,11 +23,6 @@ const SWITCH_OPTIONS: SwitchOption[] = [
     id: "dictionaryMode",
     label: "Dictionary mode",
     description: "Save the translation to your dictionary",
-  },
-  {
-    id: "lightMode",
-    label: "Light mode",
-    description: "Use a light theme for the translation",
   },
 ];
 
@@ -46,7 +41,7 @@ export function ProfileSettings() {
     );
   }
   // Toggle switch in Chrome storage
-  const toggleSwitch = (id: "voiceMode" | "dictionaryMode" | "lightMode") => {
+  const toggleSwitch = (id: "voiceMode" | "dictionaryMode") => {
     const newValue = !userSettings[id];
     chrome.storage.sync.set({ [id]: newValue });
   };

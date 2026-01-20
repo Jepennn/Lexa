@@ -18,7 +18,6 @@ export function useSpeechSynthesis(options: UseSpeechSynthesisOptions = {}) {
     const loadVoices = () => {
       const voices = window.speechSynthesis.getVoices();
       if (voices.length > 0) {
-        console.log("Voices loaded:", voices.length);
         setVoicesReady(true);
       }
     };
@@ -45,39 +44,32 @@ export function useSpeechSynthesis(options: UseSpeechSynthesisOptions = {}) {
     utterance.pitch = pitch;
     utterance.volume = volume;
 
-    // Get and set voice
     const voices = window.speechSynthesis.getVoices();
-    console.log(voices);
 
     //Find a matching voice for the language
     let selectedVoice: SpeechSynthesisVoice | undefined;
     if (lang === "en") {
       const macthingVoices = voices.filter((v) => v.lang.startsWith(lang));
       selectedVoice = macthingVoices.find((v) => v.name === "Google UK English Male");
-      console.log(selectedVoice);
     }
 
     if (lang === "es") {
       const macthingVoices = voices.filter((v) => v.lang.startsWith(lang));
       selectedVoice = macthingVoices.find((v) => v.name === "Google español");
-      console.log(selectedVoice);
     }
 
     if (lang === "fr") {
       const macthingVoices = voices.filter((v) => v.lang.startsWith(lang));
       selectedVoice = macthingVoices.find((v) => v.name === "Google français");
-      console.log(selectedVoice);
     }
 
     if (lang === "ja") {
       const macthingVoices = voices.filter((v) => v.lang.startsWith(lang));
       selectedVoice = macthingVoices.find((v) => v.name === "Google 日本語");
-      console.log(selectedVoice);
     }
 
     if (selectedVoice) {
       utterance.voice = selectedVoice;
-      console.log("Using voice:", selectedVoice.name);
     }
 
     utterance.onstart = () => setIsSpeaking(true);
@@ -90,7 +82,6 @@ export function useSpeechSynthesis(options: UseSpeechSynthesisOptions = {}) {
     window.speechSynthesis.speak(utterance);
   };
 
-  // Rest of your code...
   const cancel = () => {
     window.speechSynthesis.cancel();
     setIsSpeaking(false);
@@ -102,6 +93,5 @@ export function useSpeechSynthesis(options: UseSpeechSynthesisOptions = {}) {
     };
   }, []);
 
-  //   return { speak, cancel, isSpeaking, error };
   return { speak, cancel, isSpeaking, error, voicesReady };
 }

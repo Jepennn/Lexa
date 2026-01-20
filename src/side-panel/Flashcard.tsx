@@ -39,17 +39,14 @@ export function Flashcard({ onOpenDictionary }: FlashcardProps) {
   // Check if there are any dictionaries and fetches them.
   useEffect(() => {
     const checkDictionaries = async () => {
-      console.log("checking dictionaries");
       try {
         const dicts = await getDictionaries();
-        console.log("dicts", dicts.length);
         setDictionaries(dicts);
         setHasDictionaries(dicts.length > 0);
         if (dicts.length > 0 && !settings.dictionaryId) {
           setSettings((prev) => ({ ...prev, dictionaryId: dicts[0].id }));
         }
-      } catch (error) {
-        console.log("error", error);
+      } catch {
         setHasDictionaries(false);
       }
     };

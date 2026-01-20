@@ -1,4 +1,3 @@
-console.log("Service Worker loaded");
 import type { TranslationMessage, TranslationShortcutMessage } from "@/types";
 
 // Create the context menu on install and initialize default settings
@@ -46,8 +45,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       "voiceMode",
       "dictionaryMode",
     ]);
-
-    console.log("User settings:", userSettings);
 
     chrome.tabs.sendMessage(tab.id, {
       action: "SHOW_TRANSLATION",

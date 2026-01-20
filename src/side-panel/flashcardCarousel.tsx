@@ -178,7 +178,7 @@ export function FlashcardCarousel({ entries, onComplete }: FlashcardCarouselProp
                       <h3 className="text-2xl font-bold text-foreground text-center">
                         {entry.text}
                       </h3>
-                      <p className="text-sm text-muted-foreground mt-4">
+                      <p className="text-[9px] text-muted-foreground mt-10">
                         Tap to reveal translation
                       </p>
                     </div>

@@ -6,7 +6,6 @@ export type TranslationMessage = {
   targetLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
-  lightMode: boolean;
 };
 
 export type TranslationShortcutMessage = {
@@ -18,7 +17,6 @@ export type UserSettings = {
   sourceLang: string;
   voiceMode: boolean;
   dictionaryMode: boolean;
-  lightMode: boolean;
 };
 
 //Intro steps for the app

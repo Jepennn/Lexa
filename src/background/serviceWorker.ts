@@ -10,7 +10,6 @@ chrome.runtime.onInstalled.addListener(() => {
       targetLang: result.targetLang ?? "sv",
       voiceMode: result.voiceMode ?? true, // Voice mode enabled by default
       dictionaryMode: result.dictionaryMode ?? true, // Dictionary mode enabled by default
-      lightMode: result.lightMode ?? true, // Light mode enabled by default
       hasSeenOnboarding: result.hasSeenOnboarding ?? false, // Onboarding not seen by default
     };
 
@@ -46,7 +45,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       "targetLang",
       "voiceMode",
       "dictionaryMode",
-      "lightMode",
     ]);
 
     console.log("User settings:", userSettings);
@@ -59,7 +57,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       targetLang: userSettings.targetLang,
       voiceMode: userSettings.voiceMode,
       dictionaryMode: userSettings.dictionaryMode,
-      lightMode: userSettings.lightMode,
     } as TranslationMessage);
   }
 });

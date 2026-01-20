@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Volume2, BookOpen, Brain } from "lucide-react";
+import { X, Volume2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
@@ -112,7 +112,6 @@ export function TooltipTranslation() {
           "targetLang",
           "voiceMode",
           "dictionaryMode",
-          "lightMode",
         ]);
 
         // Call the translation function directly
@@ -124,7 +123,6 @@ export function TooltipTranslation() {
           targetLang: userSettings.targetLang,
           voiceMode: userSettings.voiceMode,
           dictionaryMode: userSettings.dictionaryMode,
-          lightMode: userSettings.lightMode,
         } as TranslationMessage);
       }
 
@@ -156,12 +154,7 @@ export function TooltipTranslation() {
     console.log("Dictionary lookup for:", originalText);
   };
 
-  const handleLearnMore = () => {
-    // Send message to service worker to open side panel
-    chrome.runtime.sendMessage({
-      action: "OPEN_SIDE_PANEL",
-    });
-  };
+
 
   const handleClose = () => {
     cancel(); // Cancel any ongoing speech
@@ -221,14 +214,6 @@ export function TooltipTranslation() {
                   </button>
                 )}
 
-                {/* Learn More button */}
-                <button
-                  onClick={handleLearnMore}
-                  className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors cursor-pointer"
-                  title="Learn more about this translation"
-                >
-                  <Brain className="size-3.5" />
-                </button>
               </div>
 
               {/* Close button */}

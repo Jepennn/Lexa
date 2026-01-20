@@ -3,10 +3,13 @@ import { X, Volume2, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
+import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
+import { getDictionaries, addEntry } from "@/lib/storage";
+import { DictionarySelectionPopover } from "./DictionarySelectionPopover";
 
 //Importing custom types
-import type { TranslationMessage } from "@/types";
+import type { TranslationMessage, Dictionary } from "@/types";
 
 export function TooltipTranslation() {
   const [originalText, setOriginalText] = useState<string>("");
@@ -14,6 +17,8 @@ export function TooltipTranslation() {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
+  const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
+  const [addedToDictionary, setAddedToDictionary] = useState<string | null>(null);
 
   // Store user settings from the message
   const [voiceMode, setVoiceMode] = useState<boolean>(true);
@@ -57,6 +62,7 @@ export function TooltipTranslation() {
     setIsLoading(true);
     setIsDownloading(false);
     setTranslatedText("");
+    setAddedToDictionary(null);
 
     try {
       //Check if the user has the necessary capabilities to translate the text
@@ -94,6 +100,22 @@ export function TooltipTranslation() {
       setIsDownloading(false);
     }
   };
+
+  useEffect(()=>{
+
+    const fetchDictionaries = async () => {
+      const dictionaries = await getDictionaries();
+
+      if (dictionaries.length > 0) {
+        setDictionaries(dictionaries);
+      } else {
+        setDictionaries([]);
+      }
+    };
+
+    //Actually fetches the dictionaries
+    fetchDictionaries();
+  }, []);
 
   useEffect(() => {
     const messageListener = async (message: TranslationMessage) => {
@@ -140,7 +162,7 @@ export function TooltipTranslation() {
     return () => {
       chrome.runtime.onMessage.removeListener(messageListener);
     };
-  }, []); // Empty deps - set up once on mount
+  }, []); 
 
   // Handler functions for toolbar actions
   const handleSpeak = () => {
@@ -149,9 +171,18 @@ export function TooltipTranslation() {
     }
   };
 
-  // TODO: Implement dictionary functionality
-  const handleDictionary = () => {
-    console.log("Dictionary lookup for:", originalText);
+  // Handle adding word to dictionary
+  const handleAddToDictionary = async (dictionaryId: string) => {
+    if (!originalText || !translatedText) return;
+    
+    try {
+      await addEntry(dictionaryId, originalText, translatedText);
+      setAddedToDictionary(dictionaryId);
+      // Reset success state after 2 seconds
+      setTimeout(() => setAddedToDictionary(null), 2000);
+    } catch (error) {
+      console.error("Failed to add entry to dictionary:", error);
+    }
   };
 
 
@@ -162,6 +193,7 @@ export function TooltipTranslation() {
     setOriginalText("");
     setTranslatedText("");
     setIsLoading(false);
+    setAddedToDictionary(null);
   };
 
   //TODO: Maybe move this logic to a custom hook
@@ -173,7 +205,7 @@ export function TooltipTranslation() {
 
   return (
     <div
-      className="absolute z-999999 min-w-[220px] max-w-[380px] animate-in fade-in slide-in-from-bottom-2 duration-200"
+      className="absolute z-999998 min-w-[220px] max-w-[380px] animate-in fade-in slide-in-from-bottom-2 duration-200"
       style={{
         left: `${position.x}px`,
         top: `${position.y - 10}px`, // 10px above the selection
@@ -205,13 +237,26 @@ export function TooltipTranslation() {
 
                 {/* Dictionary mode button */}
                 {dictionaryMode && (
-                  <button
-                    onClick={handleDictionary}
-                    className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors cursor-pointer"
-                    title="View dictionary definition"
-                  >
-                    <BookOpen className="size-3.5" />
-                  </button>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <button
+                        className="rounded px-1 py-0.5 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors cursor-pointer"
+                        title="Add to dictionary"
+                        disabled={!originalText || isLoading}
+                      >
+                        <BookOpen className="size-3.5" />
+                      </button>
+                    </PopoverTrigger>
+                    <DictionarySelectionPopover
+                      dictionaries={dictionaries}
+                      onDictionarySelect={handleAddToDictionary}
+                      addedToDictionaryId={addedToDictionary}
+                      className="z-50"
+                      side="right"
+                      align="start"
+                      sideOffset={50}
+                    />
+                  </Popover>
                 )}
 
               </div>
@@ -245,3 +290,5 @@ export function TooltipTranslation() {
     </div>
   );
 }
+
+

@@ -111,6 +111,7 @@ export function DictionaryDetail({
       <span>
         <Button
           variant="ghost"
+          
           size="sm"
           onClick={onBack}
           className="text-muted-foreground"

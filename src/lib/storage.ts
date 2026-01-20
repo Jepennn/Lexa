@@ -75,7 +75,7 @@ export async function createDictionary(
 }
 
 /**
- * Delete a dictionary and all its entries
+ * Vadete a dictionary and all its entries
  */
 export async function deleteDictionary(id: string): Promise<void> {
   const result = await chrome.storage.local.get(DICTIONARIES_KEY);

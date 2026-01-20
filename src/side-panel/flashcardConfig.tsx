@@ -71,7 +71,6 @@ export function FlashcardConfig({
       }
     };
     loadDictionaries();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleStartPractice = () => {

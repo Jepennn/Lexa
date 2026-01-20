@@ -26,6 +26,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "@/components/ui/sonner";
 import type { Dictionary, DictionaryIcon, DictionaryColor } from "@/types";
 
 const getIconComponent = (iconName: string) => {
@@ -93,8 +94,9 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
       );
       await loadDictionaries();
       setIsAdding(false);
-    } catch (error) {
-      console.error("Failed to create dictionary:", error);
+      toast.success("Dictionary created successfully");
+    } catch  {
+      toast.error("Failed to create dictionary");
     }
   };
 
@@ -103,8 +105,9 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
     try {
       await deleteDictionary(id);
       await loadDictionaries();
-    } catch (error) {
-      console.error("Failed to delete dictionary:", error);
+      toast.success("Dictionary deleted");
+    } catch {
+      toast.error("Failed to delete dictionary");
     }
   };
 

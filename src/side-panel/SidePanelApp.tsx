@@ -9,6 +9,8 @@ import { useGetUserSettings } from "@/hooks/useGetUserSettings";
 import type { sidepanelViews } from "@/types";
 import { SidePanelLayout } from "./SidePanelLayout";
 
+import { Toaster } from "@/components/ui/sonner";
+
 export function SidePanelApp() {
   const [currentView, setCurrentView] = useState<sidepanelViews>("menu");
   const [hasAccessAI] = useState("Translator" in window);
@@ -24,34 +26,44 @@ export function SidePanelApp() {
   if (!hasAccessAI) {
     return <NoAccessToAi />;
   }
-  if (shouldShowOnboarding) {
-    return <Onboarding onComplete={handleOnboardingComplete} />;
-  }
 
-  if (currentView === "menu") {
-    return <SidePanelMenu onNavigate={(view) => setCurrentView(view)} />;
-  }
+  const renderContent = () => {
+    if (shouldShowOnboarding) {
+      return <Onboarding onComplete={handleOnboardingComplete} />;
+    }
 
-  switch (currentView) {
-    case "settings":
-      return (
-        <SidePanelLayout title="Settings" onBack={() => setCurrentView("menu")}>
-          <ProfileSettings />
-        </SidePanelLayout>
-      );
-    case "dictionary":
-      return (
-        <SidePanelLayout title="Dictionary" onBack={() => setCurrentView("menu")}>
-          <Dictionary />
-        </SidePanelLayout>
-      );
-    case "flashcards":
-      return (
-        <SidePanelLayout title="Flashcards" onBack={() => setCurrentView("menu")}>
-          <Flashcard onOpenDictionary={() => setCurrentView("dictionary")} />
-        </SidePanelLayout>
-      );
-    default:
+    if (currentView === "menu") {
       return <SidePanelMenu onNavigate={(view) => setCurrentView(view)} />;
-  }
+    }
+
+    switch (currentView) {
+      case "settings":
+        return (
+          <SidePanelLayout title="Settings" onBack={() => setCurrentView("menu")}>
+            <ProfileSettings />
+          </SidePanelLayout>
+        );
+      case "dictionary":
+        return (
+          <SidePanelLayout title="Dictionary" onBack={() => setCurrentView("menu")}>
+            <Dictionary />
+          </SidePanelLayout>
+        );
+      case "flashcards":
+        return (
+          <SidePanelLayout title="Flashcards" onBack={() => setCurrentView("menu")}>
+            <Flashcard onOpenDictionary={() => setCurrentView("dictionary")} />
+          </SidePanelLayout>
+        );
+      default:
+        return <SidePanelMenu onNavigate={(view) => setCurrentView(view)} />;
+    }
+  };
+
+  return (
+    <>
+      {renderContent()}
+      <Toaster />
+    </>
+  );
 }

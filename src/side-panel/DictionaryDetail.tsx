@@ -4,11 +4,14 @@ import { Input } from "@/components/ui/input";
 import { 
   Plus, 
   Search, 
-  Filter
+  Filter,
+  AlertCircle,
+  RefreshCw
 } from "lucide-react";
 import { WordCard } from "./WordCard";
 import { AddWordForm, type NewWordData } from "./AddWordForm";
 import { getEntries, addEntry, deleteEntry } from "@/lib/storage";
+import { toast } from "@/components/ui/sonner";
 import type { DictionaryEntry } from "@/types";
 
 interface DictionaryDetailProps {
@@ -28,33 +31,24 @@ export function DictionaryDetail({
   const [words, setWords] = useState<DictionaryEntry[]>([]);
   const [isAddingWord, setIsAddingWord] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const loadWords = async () => {
-      setIsLoading(true);
-      try {
-        const entries = await getEntries(dictionaryId);
-        setWords(entries);
-      } catch (error) {
-        console.error("Failed to load words:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    loadWords();
-  }, [dictionaryId]);
+  const [error, setError] = useState<string | null>(null);
 
   const loadWords = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const entries = await getEntries(dictionaryId);
       setWords(entries);
-    } catch (error) {
-      console.error("Failed to load words:", error);
+    } catch (err) {
+      setError("Failed to load words. Please try again.");
     } finally {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    loadWords();
+  }, [dictionaryId]);
 
   const filteredWords = words.filter(
     (w) =>
@@ -67,8 +61,10 @@ export function DictionaryDetail({
     try {
       await deleteEntry(dictionaryId, id);
       await loadWords();
+      toast.success("Word deleted");
     } catch (error) {
       console.error("Failed to delete word:", error);
+      toast.error("Failed to delete word");
     }
   };
 
@@ -78,8 +74,10 @@ export function DictionaryDetail({
       await addEntry(dictionaryId, data.original, data.translation);
       await loadWords();
       setIsAddingWord(false);
+      toast.success("Word added successfully");
     } catch (error) {
       console.error("Failed to add word:", error);
+      toast.error("Failed to add word");
     }
   };
 
@@ -168,6 +166,18 @@ export function DictionaryDetail({
              <div className="flex justify-center py-10">
                <p className="text-sm text-muted-foreground">Loading words...</p>
              </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground space-y-4">
+              <AlertCircle className="size-8 text-destructive/80" />
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-foreground">{error}</p>
+                <p className="text-xs">Check your connection and try again.</p>
+              </div>
+              <Button variant="outline" size="sm" onClick={loadWords} className="gap-2">
+                <RefreshCw className="size-3.5" />
+                Retry
+              </Button>
+            </div>
           ) : filteredWords.length > 0 ? (
             filteredWords.map((word) => (
               <WordCard 

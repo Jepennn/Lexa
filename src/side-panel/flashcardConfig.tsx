@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Settings2, Shuffle, BookOpen } from "lucide-react";
+import { Settings2, Shuffle, BookOpen, AlertCircle, RefreshCw } from "lucide-react";
 import { getDictionaries } from "@/lib/storage";
 import type { Dictionary } from "@/types";
 
@@ -47,29 +47,32 @@ export function FlashcardConfig({
 }: FlashcardConfigProps) {
   const [dictionaries, setDictionaries] = useState<Dictionary[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [internalIsOpen, setInternalIsOpen] = useState(false);
   
   // Support both controlled and uncontrolled modes
   const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
   const setIsOpen = controlledOnOpenChange || setInternalIsOpen;
 
-  useEffect(() => {
-    const loadDictionaries = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getDictionaries();
-        setDictionaries(data);
+  const loadDictionaries = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await getDictionaries();
+      setDictionaries(data);
 
-        // Auto-select first dictionary if none selected
-        if (!settings.dictionaryId && data.length > 0) {
-          onSettingsChange({ ...settings, dictionaryId: data[0].id });
-        }
-      } catch (error) {
-        console.error("Failed to load dictionaries:", error);
-      } finally {
-        setIsLoading(false);
+      // Auto-select first dictionary if none selected
+      if (!settings.dictionaryId && data.length > 0) {
+        onSettingsChange({ ...settings, dictionaryId: data[0].id });
       }
-    };
+    } catch  {
+      setError("Failed to load dictionaries");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     loadDictionaries();
   }, []);
 
@@ -104,6 +107,20 @@ export function FlashcardConfig({
               <Label className="text-sm font-medium text-foreground">Dictionary</Label>
               {isLoading ? (
                 <div className="h-9 bg-muted/50 rounded-md animate-pulse" />
+              ) : error ? (
+                <div className="flex items-center gap-2 text-destructive text-sm bg-destructive/10 p-2 rounded-md">
+                   <AlertCircle className="size-4" />
+                   <span className="flex-1">{error}</span>
+                   <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="h-6 w-6 hover:bg-destructive/20" 
+                    onClick={loadDictionaries}
+                   >
+                     <RefreshCw className="size-3" />
+                     <span className="sr-only">Retry</span>
+                   </Button>
+                </div>
               ) : dictionaries.length === 0 ? (
                 <p className="text-sm text-muted-foreground">
                   No dictionaries available. Create one first.
@@ -179,7 +196,7 @@ export function FlashcardConfig({
           <DrawerFooter className="pt-6">
             <Button
               onClick={handleStartPractice}
-              disabled={!settings.dictionaryId || dictionaries.length === 0}
+              disabled={!settings.dictionaryId || dictionaries.length === 0 || !!error}
               className="w-full"
             >
               Start Practice

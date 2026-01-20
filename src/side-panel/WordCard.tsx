@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   MoreHorizontal, 
-  Volume2, 
   Trash2, 
 } from "lucide-react";
 import {
@@ -15,13 +14,11 @@ import type { DictionaryEntry } from "@/types";
 
 interface WordCardProps {
   word: DictionaryEntry;
-  onPlayAudio?: (text: string) => void;
   onDelete?: (id: string) => void;
 }
 
 export function WordCard({ 
   word, 
-  onPlayAudio, 
   onDelete,
 }: WordCardProps) {
 
@@ -41,19 +38,7 @@ export function WordCard({
             </p>
           </div>
 
-          {/* Actions Column */}
-          <div className="flex items-center gap-1">
-             {/* Audio Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-full"
-              onClick={() => onPlayAudio?.(word.translation)}
-            >
-              <Volume2 className="size-4" />
-              <span className="sr-only">Play audio</span>
-            </Button>
-          </div>
+   
         </div>
 
         {/* Absolute Positioned Menu (Top Right) */}

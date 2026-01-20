@@ -62,8 +62,7 @@ export function DictionaryDetail({
       await deleteEntry(dictionaryId, id);
       await loadWords();
       toast.success("Word deleted");
-    } catch (error) {
-      console.error("Failed to delete word:", error);
+    } catch  {
       toast.error("Failed to delete word");
     }
   };
@@ -75,8 +74,7 @@ export function DictionaryDetail({
       await loadWords();
       setIsAddingWord(false);
       toast.success("Word added successfully");
-    } catch (error) {
-      console.error("Failed to add word:", error);
+    } catch  {
       toast.error("Failed to add word");
     }
   };
@@ -183,7 +181,6 @@ export function DictionaryDetail({
               <WordCard 
                 key={word.id} 
                 word={word} 
-                onPlayAudio={(text) => console.log("Playing:", text)}
                 onDelete={handleDelete}
               />
             ))

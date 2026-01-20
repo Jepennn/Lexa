@@ -8,6 +8,7 @@ import { FlashcardConfig, type FlashcardSettings } from "./flashcardConfig";
 import { getEntries, getDictionaries } from "@/lib/storage";
 import type { Dictionary, DictionaryEntry } from "@/types";
 import { cn } from "@/lib/utils";
+import { toast } from "@/components/ui/sonner";
 
 type FlashcardProps = {
   onOpenDictionary?: () => void;
@@ -63,8 +64,8 @@ export function Flashcard({ onOpenDictionary }: FlashcardProps) {
           total += entries.length;
         }
         setTotalWordCount(total);
-      } catch (error) {
-        console.error("Failed to get total word count:", error);
+      } catch {
+        // Fail silently for decorative total count
       }
     };
     if (dictionaries.length > 0) {
@@ -94,8 +95,8 @@ export function Flashcard({ onOpenDictionary }: FlashcardProps) {
 
       setEntries(wordEntries);
       setIsPracticing(true);
-    } catch (error) {
-      console.error("Failed to load entries:", error);
+    } catch {
+      toast.error("Failed to start practice session");
     }
   };
 

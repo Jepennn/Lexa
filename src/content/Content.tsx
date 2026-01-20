@@ -1,6 +1,7 @@
 // Now import and initialize React (this happens after listener is set up)
 import React from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipTranslation } from "./TooltipTranslation";
 import contentStyles from "./content.css?inline";
 
@@ -25,6 +26,7 @@ shadowRoot.appendChild(styleSheet);
 createRoot(shadowContainer).render(
   <React.StrictMode>
     <TooltipTranslation />
+    <Toaster />
   </React.StrictMode>
 );
 

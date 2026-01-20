@@ -16,6 +16,8 @@ import {
   Star,
   MoreHorizontal,
   Trash2,
+  AlertCircle,
+  RefreshCw,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { AddDictionaryForm, type NewDictionaryData } from "./AddDictionaryForm";
@@ -26,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { toast } from "@/components/ui/sonner";
 import type { Dictionary, DictionaryIcon, DictionaryColor } from "@/types";
 
 const getIconComponent = (iconName: string) => {
@@ -60,6 +63,7 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
   const [searchQuery, setSearchQuery] = useState("");
   const [isAdding, setIsAdding] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadDictionaries();
@@ -67,11 +71,12 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
 
   const loadDictionaries = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       const data = await getDictionaries();
       setDictionaries(data);
-    } catch (error) {
-      console.error("Failed to load dictionaries:", error);
+    } catch  {
+      setError("Failed to load dictionaries. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -93,8 +98,9 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
       );
       await loadDictionaries();
       setIsAdding(false);
-    } catch (error) {
-      console.error("Failed to create dictionary:", error);
+      toast.success("Dictionary created successfully");
+    } catch  {
+      toast.error("Failed to create dictionary");
     }
   };
 
@@ -103,8 +109,9 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
     try {
       await deleteDictionary(id);
       await loadDictionaries();
-    } catch (error) {
-      console.error("Failed to delete dictionary:", error);
+      toast.success("Dictionary deleted");
+    } catch {
+      toast.error("Failed to delete dictionary");
     }
   };
 
@@ -154,6 +161,18 @@ export function DictionaryList({ onSelectDictionary, className }: DictionaryList
         {isLoading ? (
           <div className="flex justify-center py-10">
             <p className="text-sm text-muted-foreground">Loading dictionaries...</p>
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-12 text-center text-muted-foreground space-y-4">
+            <AlertCircle className="size-8 text-destructive/80" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-foreground">{error}</p>
+              <p className="text-xs">Check your connection and try again.</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={loadDictionaries} className="gap-2">
+              <RefreshCw className="size-3.5" />
+              Retry
+            </Button>
           </div>
         ) : filteredDictionaries.length > 0 ? (
           filteredDictionaries.map((dict) => {

@@ -7,6 +7,7 @@ import { Popover, PopoverTrigger } from "@/components/ui/popover";
 import { useSpeechSynthesis } from "@/hooks/useSpeechSynthesis";
 import { getDictionaries, addEntry } from "@/lib/storage";
 import { DictionarySelectionPopover } from "./DictionarySelectionPopover";
+import { toast } from "@/components/ui/sonner";
 
 //Importing custom types
 import type { TranslationMessage, Dictionary } from "@/types";
@@ -72,7 +73,6 @@ export function TooltipTranslation() {
       });
 
       if (translatorCapabilities === "unavailable") {
-        console.warn("Translation capabilities unavailable");
         setTranslatedText("Translation unavailable for this language");
         setIsLoading(false);
         return;
@@ -92,9 +92,9 @@ export function TooltipTranslation() {
       // Translate the text
       const translated = await translator.translate(message.text);
       setTranslatedText(translated);
-    } catch (error) {
-      console.error("Translation error:", error);
+    } catch {
       setTranslatedText("Translation failed. Please try again.");
+      toast.error("Translation failed. Please try again.");
     } finally {
       setIsLoading(false);
       setIsDownloading(false);
@@ -178,10 +178,11 @@ export function TooltipTranslation() {
     try {
       await addEntry(dictionaryId, originalText, translatedText);
       setAddedToDictionary(dictionaryId);
+      toast.success("Added to dictionary");
       // Reset success state after 2 seconds
       setTimeout(() => setAddedToDictionary(null), 2000);
-    } catch (error) {
-      console.error("Failed to add entry to dictionary:", error);
+    } catch {
+      toast.error("Failed to add to dictionary");
     }
   };
 

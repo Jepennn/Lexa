@@ -26,7 +26,7 @@ export function WordCard({
     <Card 
       className="group relative overflow-hidden transition-all duration-300 hover:shadow-md border-border/60 hover:border-primary/30"
      >
-      <CardContent className="p-4">
+      <CardContent className="p-6">
         <div className="flex justify-between items-center gap-3">
           {/* Main Content */}
           <div className="flex-1 space-y-1">

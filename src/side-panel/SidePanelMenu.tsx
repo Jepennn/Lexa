@@ -61,7 +61,7 @@ export function SidePanelMenu({ onNavigate }: SidePanelMenuProps) {
             </div>
 
             <div className="min-w-0">
-              <h1 className="text-base font-semibold tracking-tight text-foreground">Learnly</h1>
+              <h1 className="text-base font-semibold tracking-tight text-foreground">Lexa</h1>
               <p className="text-xs text-muted-foreground">Save words. Practice daily.</p>
             </div>
           </div>

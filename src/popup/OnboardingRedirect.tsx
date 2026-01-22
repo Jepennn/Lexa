@@ -18,7 +18,7 @@ export function OnboardingRedirect({ onOpenSidePanel }: OnboardingRedirectProps)
         </div>
 
         <div className="space-y-3 text-center max-w-[280px]">
-          <h2 className="font-bold text-2xl tracking-tight text-foreground">Welcome to Learnly</h2>
+          <h2 className="font-bold text-2xl tracking-tight text-foreground">Welcome to Lexa</h2>
           <p className="text-sm text-muted-foreground leading-relaxed px-2">
             Your local AI translation language companion.
           </p>

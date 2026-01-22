@@ -85,7 +85,6 @@ function PopupApp() {
           <div className="h-5 w-5 bg-primary rounded-md flex items-center justify-center">
             <span className="text-primary-foreground font-bold text-[10px]">L</span>
           </div>
-          <span className="font-bold text-base tracking-tight">Learnly</span>
         </div>
         <div className="flex items-center gap-1">
           <div className="flex items-center gap-1.5 px-2 py-0.5 bg-green-500/10 rounded-full border border-green-500/20">

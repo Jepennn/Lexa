@@ -110,7 +110,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
         {/* Header / Branding */}
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold tracking-tight bg-brand-gradient bg-clip-text text-transparent">
-            Welcome to Learnly
+            Welcome to Lexa
           </h1>
           <p className="text-sm text-muted-foreground max-w-[200px] mx-auto leading-tight">
             Your local AI translation sidekick.

@@ -1,6 +1,6 @@
 {
-  "name": "Learnly",
-  "description": "Good vibes in Chrome.",
+  "name": "Lexa",
+  "description": "Your local AI translation language companion.",
   "version": "1.0",
   "manifest_version": 3,
   "action": {
@@ -9,8 +9,9 @@
   },
   "icons": {
     "16": "images/icon.png",
-    "48": "images/icon.png",
-    "128": "images/icon.png"
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
   },
   "commands": {
     "open-sidepanel": {
@@ -18,7 +19,7 @@
         "default": "Ctrl+Shift+L",
         "mac": "Command+Shift+L"
       },
-      "description": "Open the Learnly side panel"
+      "description": "Open the Lexa side panel"
     },
     "translate-marked-text": {
       "suggested_key": {

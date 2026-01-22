@@ -1,6 +1,6 @@
-# Learnly - Chrome Extension
+# Lexa - Chrome Extension
 
-**Learnly** is a privacy-focused Chrome Extension for language learning and translation. It provides offline-capable translations, personal dictionaries, and flashcards, using built-in AI that runs entirely on your local machine.
+**Lexa** is a privacy-focused Chrome Extension for language learning and translation. It provides offline-capable translations, personal dictionaries, and flashcards, using built-in AI that runs entirely on your local machine.
 
 ## 🚀 Key Features
 
@@ -18,7 +18,7 @@
 
 ## 📋 Prerequisites
 
-To run Learnly locally, you need:
+To run Lexa locally, you need:
 
 1.  **Node.js** (v18 or higher) and **npm**.
 2.  **Google Chrome** (Modern version with Built-in AI support).
@@ -27,8 +27,8 @@ To run Learnly locally, you need:
 
 1.  **Clone & Install**
     ```bash
-    git clone https://github.com/yourusername/learnly.git
-    cd learnly
+    git clone https://github.com/yourusername/lexa.git
+    cd lexa
     npm install
     ```
 
